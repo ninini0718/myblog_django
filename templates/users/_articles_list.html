@@ -1,0 +1,78 @@
+{% load static %}
+
+<!-- 🔧 文章排序 -->
+<form method="get" class="d-flex align-items-center mb-3">
+    <label class="me-2 text-muted fw-bold">排序方式：</label>
+
+    <select name="sort" class="form-select form-select-sm w-auto"
+            onchange="this.form.submit()">
+        <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>
+            最新发布
+        </option>
+        <option value="views" {% if sort == 'views' %}selected{% endif %}>
+            浏览最多
+        </option>
+        <option value="likes" {% if sort == 'likes' %}selected{% endif %}>
+            点赞最多
+        </option>
+    </select>
+
+    {% if request.GET.page %}
+        <input type="hidden" name="page" value="{{ request.GET.page }}">
+    {% endif %}
+</form>
+
+<!-- 🔧 文章列表 -->
+<div class="list-group">
+    {% for article in articles %}
+        <a href="{% url 'articles:article_detail' article.slug %}" class="list-group-item list-group-item-action mb-2 shadow-sm rounded">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-1">{{ article.title }}</h5>
+                <small class="text-muted">
+                    📅 {{ article.created_at|date:"Y-m-d H:i" }}
+                </small>
+            </div>
+            <p class="mb-1 text-secondary small">
+                {{ article.excerpt|truncatewords:25 }}
+            </p>
+            <div class="d-flex justify-content-end gap-3 small text-muted">
+                <span>👁 {{ article.views }}</span>
+                <span>❤️ {{ article.likes }}</span>
+            </div>
+        </a>
+    {% empty %}
+        <p class="text-muted text-center">还没有发表任何文章。</p>
+    {% endfor %}
+</div>
+
+<!-- 🔧 分页导航 -->
+{% if articles.paginator.num_pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center pagination-sm">
+
+        {% if articles.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ articles.previous_page_number }}&sort={{ sort }}">
+                    上一页
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                第 {{ articles.number }} / {{ articles.paginator.num_pages }} 页
+            </span>
+        </li>
+
+        {% if articles.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ articles.next_page_number }}&sort={{ sort }}">
+                    下一页
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

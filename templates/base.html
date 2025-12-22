@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ profile_user.profile.blog_title|default:"我的博客" }}{% endblock %}</title>
+
+    <!-- Bootstrap 5 样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 🔧 博客主题样式 -->
+    {% if profile_user.profile.blog_theme == 'dark' %}
+        <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    {% elif profile_user.profile.blog_theme == 'card' %}
+        <link rel="stylesheet" href="{% static 'css/card.css' %}">
+    {% else %}
+        <link rel="stylesheet" href="{% static 'css/light.css' %}">
+    {% endif %}
+
+    <style>
+        /* 背景效果 */
+        body {
+            background-image: url('{% if profile_user.profile.blog_background %}{{ profile_user.profile.blog_background.url }}{% endif %}');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        /* 主内容卡片样式 */
+        main.container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 页脚样式 */
+        footer {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* 按钮圆角 */
+        .btn {
+            border-radius: 0.5rem;
+        }
+
+        /* 消息提示美化 */
+        .alert {
+            border-radius: 0.5rem;
+        }
+
+        /* 卡片阴影 */
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* 分页按钮对齐 */
+        .pagination .page-link {
+            min-width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ==================== 导航栏 ==================== -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+            <a class="navbar-brand" href="{% url 'articles:article_list' %}">
+                <i class="fas fa-blog"></i> Django博客
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'articles:article_list' %}">首页</a></li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user me-1"></i> 个人资料</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'account_logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-1"></i> 退出登录
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt me-1"></i> 登录</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}"><i class="fas fa-user-plus me-1"></i> 注册</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ==================== 主内容 ==================== -->
+    <main class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="bg-dark text-light py-3 mt-4">
+        <div class="container text-center">
+            &copy; 2025 Django博客 · All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,55 @@
+/* ===== QQ 风格表情面板 ===== */
+.emoji-panel {
+    position: absolute;
+    bottom: 45px;
+    right: 0;
+    width: 240px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    z-index: 999;
+}
+
+.emoji-panel span {
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 6px;
+    transition: background-color .15s;
+}
+
+.emoji-panel span:hover {
+    background-color: #f1f3f5;
+}
+
+.qq-style-panel {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 35px;
+    right: 0;
+    z-index: 999;
+}
+
+.qq-style-panel span {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 2px;
+    transition: transform 0.2s;
+}
+
+.qq-style-panel span:hover {
+    transform: scale(1.2);
+}
+

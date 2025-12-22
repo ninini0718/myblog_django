@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}编辑资料{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+
+            <!-- 卡片头部 -->
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">编辑个人资料</h3>
+            </div>
+
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 当前头像显示 -->
+                        {% if field.name == 'avatar' and user.profile.avatar %}
+                            <div class="mb-3 text-center">
+                                <img src="{{ user.profile.avatar.url }}" class="img-thumbnail rounded-circle" width="100" height="100" alt="当前头像">
+                            </div>
+                        {% endif %}
+
+                        <!-- 当前博客背景显示 -->
+                        {% if field.name == 'blog_background' and user.profile.blog_background %}
+                            <div class="mb-3 text-center">
+                                <img src="{{ user.profile.blog_background.url }}" class="img-thumbnail" width="100%" style="max-height:200px; object-fit:cover;" alt="当前博客背景">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- 操作按钮 -->
+                    <div class="d-flex justify-content-start mt-3">
+                        <button type="submit" class="btn btn-primary me-2">保存</button>
+                        <a href="{% url 'users:change_password' %}" class="btn btn-secondary">修改密码</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

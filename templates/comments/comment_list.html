@@ -1,0 +1,98 @@
+{% load static %}
+{% load humanize %}
+
+<div class="comments-section">
+    <h3>
+        <i class="fas fa-comments"></i> 评论 ({{ total_comments }})
+    </h3>
+    
+    <!-- 评论排序选项 -->
+    <div class="comment-sort mb-3">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm {% if sort_by == 'newest' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+                    onclick="sortComments('newest')">
+                最新
+            </button>
+            <button type="button" class="btn btn-sm {% if sort_by == 'oldest' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+                    onclick="sortComments('oldest')">
+                最早
+            </button>
+            <button type="button" class="btn btn-sm {% if sort_by == 'popular' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+                    onclick="sortComments('popular')">
+                最热
+            </button>
+        </div>
+    </div>
+    
+    <!-- 评论列表 -->
+    <div class="comments-list" id="comments-list">
+        {% for comment in comments %}
+            {% include 'comments/comment_item.html' with comment=comment %}
+        {% empty %}
+            <div class="no-comments text-center py-4">
+                <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                <p class="text-muted">还没有评论，来发表第一个评论吧！</p>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- 分页 -->
+    {% if is_paginated %}
+        <nav aria-label="评论分页">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&sort={{ sort_by }}">首页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&sort={{ sort_by }}">上一页</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ sort_by }}">下一页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&sort={{ sort_by }}">末页</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<style>
+.comments-section {
+    margin-top: 30px;
+}
+
+.comment-sort {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.no-comments {
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.comments-list {
+    margin-top: 20px;
+}
+</style>
+
+<script>
+function sortComments(sortBy) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortBy);
+    url.searchParams.set('page', '1');
+    window.location.href = url.toString();
+}
+</script>

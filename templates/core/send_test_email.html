@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}发送测试邮件{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>发送测试邮件</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="recipient" class="form-label">收件人邮箱</label>
+            <input type="email" class="form-control" id="recipient" name="recipient" required>
+        </div>
+        <div class="mb-3">
+            <label for="provider" class="form-label">邮件提供商</label>
+            <select class="form-select" id="provider" name="provider">
+                <option value="AUTO">自动选择（带备用）</option>
+                <option value="GMAIL">Gmail API</option>
+                <option value="QQ">QQ邮箱</option>
+                <option value="SENDGRID">SendGrid</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">发送测试邮件</button>
+        <a href="{% url 'core:test_email' %}" class="btn btn-secondary">返回</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}注册 - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .signup-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .signup-form {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 100%;
+        max-width: 450px;
+    }
+    
+    .signup-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .signup-body {
+        padding: 40px 30px;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e1e5eb;
+        margin-bottom: 20px;
+    }
+    
+    .form-control:focus {
+        border-color: #f093fb;
+        box-shadow: 0 0 0 0.25rem rgba(240, 147, 251, 0.25);
+    }
+    
+    .btn-signup {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .password-strength {
+        height: 5px;
+        border-radius: 5px;
+        margin-top: -10px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+    }
+    
+    .strength-weak {
+        background-color: #dc3545;
+        width: 33%;
+    }
+    
+    .strength-medium {
+        background-color: #ffc107;
+        width: 66%;
+    }
+    
+    .strength-strong {
+        background-color: #28a745;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-form">
+        <div class="signup-header">
+            <h3 class="mb-0">创建账户</h3>
+            <p class="mb-0 mt-2">加入我们的社区</p>
+        </div>
+        
+        <div class="signup-body">
+            <form method="POST" action="{% url 'account_signup' %}" id="signup-form">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">用户名</label>
+                    <input type="text" name="username" placeholder="请输入用户名" class="form-control" required id="id_username">
+                    <div class="form-text">用户名只能包含字母、数字和@/./+/-/_字符</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">电子邮箱</label>
+                    <input type="email" name="email" placeholder="请输入电子邮箱" class="form-control" required id="id_email">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">密码</label>
+                    <input type="password" name="password1" placeholder="请输入密码" class="form-control" required id="id_password1">
+                    <div class="password-strength" id="password-strength"></div>
+                    <div class="form-text">密码至少8个字符，不能全是数字</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">确认密码</label>
+                    <input type="password" name="password2" placeholder="请再次输入密码" class="form-control" required id="id_password2">
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="terms" class="form-check-input" required id="id_terms">
+                    <label for="id_terms" class="form-check-label">
+                        我已阅读并同意 <a href="#" class="text-decoration-none">服务条款</a> 和 <a href="#" class="text-decoration-none">隐私政策</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-signup">注册</button>
+                
+                <div class="text-center mt-4">
+                    <p>已有账户？ <a href="{% url 'account_login' %}" class="text-decoration-none">立即登录</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const password1 = document.getElementById('id_password1');
+        const passwordStrength = document.getElementById('password-strength');
+        
+        password1.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            // 长度检查
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+            
+            // 复杂度检查
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+            
+            // 更新强度指示器
+            passwordStrength.className = 'password-strength';
+            
+            if (password.length > 0) {
+                if (strength <= 2) {
+                    passwordStrength.classList.add('strength-weak');
+                } else if (strength <= 4) {
+                    passwordStrength.classList.add('strength-medium');
+                } else {
+                    passwordStrength.classList.add('strength-strong');
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
