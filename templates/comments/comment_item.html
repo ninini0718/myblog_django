@@ -1,0 +1,384 @@
+{% load static %}
+{% load humanize %}
+
+<div class="comment-item {% if comment.is_deleted %}comment-deleted{% endif %}" 
+     id="comment-{{ comment.id }}"
+     style="{% if comment.parent %}margin-left: {{ comment.level }}0px;{% endif %}">
+
+    {% if comment.is_deleted %}
+        <div class="alert alert-warning">
+            <i class="fas fa-trash"></i> 该评论已被删除
+        </div>
+    {% else %}
+        <div class="comment-header">
+            <div class="d-flex align-items-center">
+                <!-- 用户头像 -->
+                <img src="{{ comment.author.avatar.url|default:'/static/images/default-avatar.png' }}" 
+                     alt="{{ comment.author.username }}" 
+                     class="rounded-circle me-2" 
+                     width="40" height="40">
+
+                <!-- 用户信息 -->
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center">
+                        <strong class="me-2">
+                            <a href="{% url 'users:profile' comment.author.username %}" 
+                               class="text-decoration-none text-dark">
+                                {{ comment.author.nickname|default:comment.author.username }}
+                            </a>
+                        </strong>
+
+                        {% if comment.author.is_staff %}
+                            <span class="badge bg-danger me-1">管理员</span>
+                        {% elif comment.author.is_vip %}
+                            <span class="badge bg-warning me-1">VIP</span>
+                        {% endif %}
+
+                        <span class="badge bg-secondary me-2">#{{ comment.floor }}</span>
+                    </div>
+
+                    <small class="text-muted">
+                        <i class="far fa-clock"></i> {{ comment.created_at|naturaltime }}
+                        {% if comment.updated_at != comment.created_at %}
+                            <span class="text-info">(已编辑)</span>
+                        {% endif %}
+                    </small>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="comment-actions">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if user.is_authenticated %}
+                                <li>
+                                    <button class="dropdown-item" onclick="replyComment({{ comment.id }})">
+                                        <i class="fas fa-reply"></i> 回复
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" onclick="likeComment({{ comment.id }})">
+                                        <i class="fas fa-thumbs-up"></i> 点赞 ({{ comment.likes_count }})
+                                    </button>
+                                </li>
+
+                                {% if user == comment.author or user.is_staff %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <button class="dropdown-item" onclick="editComment({{ comment.id }})">
+                                            <i class="fas fa-edit"></i> 编辑
+                                        </button>
+                                    </li>
+                                {% endif %}
+
+                                {% if user.is_staff %}
+                                    <li>
+                                        <button class="dropdown-item text-warning" onclick="reportComment({{ comment.id }})">
+                                            <i class="fas fa-flag"></i> 举报
+                                        </button>
+                                    </li>
+                                {% endif %}
+
+                                {% if user == comment.author or user.is_staff %}
+                                    <li>
+                                        <button class="dropdown-item text-danger" onclick="deleteComment({{ comment.id }})">
+                                            <i class="fas fa-trash"></i> 删除
+                                        </button>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评论内容 -->
+        <div class="comment-content mt-2">
+            {% if comment.parent %}
+                <div class="reply-to mb-2">
+                    <small class="text-muted">
+                        回复 <a href="#comment-{{ comment.parent.id }}" class="text-decoration-none">
+                            @{{ comment.parent.author.nickname|default:comment.parent.author.username }}
+                        </a>:
+                    </small>
+                </div>
+            {% endif %}
+            <div class="comment-text">
+                {{ comment.content|linebreaks }}
+                {% if comment.image %}
+                    <div class="mt-2">
+                        <img src="{{ comment.image.url }}" alt="评论图片" class="img-fluid rounded" style="max-height: 200px;">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 评论互动栏 -->
+        <div class="comment-footer mt-2">
+            <div class="d-flex align-items-center text-muted">
+                <button class="btn btn-sm btn-outline-danger me-3 like-btn" 
+                        data-comment-id="{{ comment.id }}" onclick="likeComment({{ comment.id }})">
+                    <i class="fas fa-heart"></i> <span class="like-count">{{ comment.likes_count }}</span>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary me-3" onclick="replyComment({{ comment.id }})">
+                    <i class="fas fa-reply"></i> 回复
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="shareComment({{ comment.id }})">
+                    <i class="fas fa-share"></i> 分享
+                </button>
+            </div>
+        </div>
+
+        <!-- 回复表单（初始隐藏） -->
+        <div id="reply-form-{{ comment.id }}" class="reply-form mt-3" style="display: none;">
+            {% include 'comments/comment_form.html' with parent_comment=comment %}
+        </div>
+
+        <!-- 子评论 -->
+        {% if comment.replies.exists %}
+            <div class="replies mt-3">
+                {% for reply in comment.replies.all %}
+                    {% include 'comments/comment_item.html' with comment=reply %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+
+<style>
+.comment-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.comment-deleted {
+    opacity: 0.6;
+    background: #f8f9fa;
+}
+
+.comment-header {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.comment-text {
+    font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.reply-to {
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+}
+
+.replies {
+    border-left: 2px solid #e9ecef;
+    padding-left: 15px;
+}
+
+.like-btn.liked {
+    background: #dc3545;
+    color: white;
+}
+
+.reply-form {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+</style>
+
+<script>
+// 点赞评论
+function likeComment(commentId) {
+    fetch(`/comments/api/${commentId}/like/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const likeBtn = document.querySelector(`.like-btn[data-comment-id="${commentId}"]`);
+        const likeCount = likeBtn.querySelector('.like-count');
+        
+        if (data.liked) {
+            likeBtn.classList.add('liked');
+        } else {
+            likeBtn.classList.remove('liked');
+        }
+        
+        likeCount.textContent = data.likes_count;
+        
+        // 显示提示
+        showToast(data.message);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('操作失败，请重试');
+    });
+}
+
+// 回复评论
+function replyComment(commentId) {
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    
+    // 隐藏其他回复表单
+    document.querySelectorAll('.reply-form').forEach(form => {
+        if (form.id !== `reply-form-${commentId}`) {
+            form.style.display = 'none';
+        }
+    });
+    
+    // 切换当前回复表单
+    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+    
+    // 滚动到回复表单
+    if (replyForm.style.display === 'block') {
+        replyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 聚焦到文本框
+        const textarea = replyForm.querySelector('textarea');
+        if (textarea) {
+            textarea.focus();
+        }
+    }
+}
+
+// 编辑评论
+function editComment(commentId) {
+    // 这里可以实现编辑功能
+    showToast('编辑功能开发中...');
+}
+
+// 删除评论
+function deleteComment(commentId) {
+    if (confirm('确定要删除这条评论吗？')) {
+        fetch(`/comments/api/${commentId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const commentElement = document.getElementById(`comment-${commentId}`);
+                commentElement.style.opacity = '0.5';
+                commentElement.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-trash"></i> 该评论已被删除
+                    </div>
+                `;
+                showToast('评论已删除');
+            } else {
+                showToast(data.message || '删除失败');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('删除失败，请重试');
+        });
+    }
+}
+
+// 举报评论
+function reportComment(commentId) {
+    const reason = prompt('请输入举报原因：');
+    if (reason) {
+        fetch(`/comments/api/${commentId}/report/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ reason: reason })
+        })
+        .then(response => response.json())
+        .then(data => {
+            showToast(data.message || '举报已提交');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('举报失败，请重试');
+        });
+    }
+}
+
+// 分享评论
+function shareComment(commentId) {
+    const url = window.location.origin + window.location.pathname + '#comment-' + commentId;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: '分享评论',
+            url: url
+        });
+    } else {
+        // 复制到剪贴板
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('链接已复制到剪贴板');
+        });
+    }
+}
+
+// 获取CSRF Token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// 显示提示信息
+function showToast(message) {
+    // 创建toast元素
+    const toast = document.createElement('div');
+    toast.className = 'toast align-items-center text-white bg-secondary border-0';
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    // 添加到页面
+    document.body.appendChild(toast);
+    
+    // 显示toast
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // 自动移除
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>

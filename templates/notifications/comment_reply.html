@@ -1,0 +1,4 @@
+<p>你的评论“{{ parent_comment.content|truncatewords:10 }}”收到了回复：</p>
+<p>{{ comment.content }}</p>
+<p>查看原文：<a href="{{ article.get_absolute_url }}">{{ article.title }}</a></p>
+  

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if is_own_profile %}
+        我的资料
+    {% else %}
+        {{ profile_user.get_full_name|default:profile_user.username }}的资料
+    {% endif %}
+    - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+    <!-- 左侧：用户信息卡片 -->
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+            <div class="card-body">
+
+                <!-- 🔧 修改点：使用 profile.avatar 而非 profile_user.avatar，避免空值错误 -->
+                {% if profile_user.profile.avatar %}
+                    <img src="{{ profile_user.profile.avatar.url }}" alt="头像" class="rounded-circle mb-3 border border-2 border-primary" width="150" height="150">
+                {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" alt="默认头像" class="rounded-circle mb-3 border border-2 border-secondary" width="150" height="150">
+                {% endif %}
+
+                <h4 class="mt-2">{{ profile_user.get_full_name|default:profile_user.username }}</h4>
+                <p class="text-muted">@{{ profile_user.username }}</p>
+
+                <!-- 个人简介 -->
+                {% if profile_user.profile.bio %}
+                    <p class="mt-3 small text-muted">{{ profile_user.profile.bio }}</p>
+                {% endif %}
+
+                <!-- 文章数、关注数、粉丝数 -->
+                <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+                    <span class="badge bg-primary">文章 {{ profile_user.articles_count }}</span>
+                    <span class="badge bg-success">关注 {{ profile_user.following_count }}</span>
+                    <span class="badge bg-info">粉丝 {{ profile_user.followers_count }}</span>
+                </div>
+
+                <!-- 关注/取消关注按钮 -->
+                {% if not is_own_profile and request.user.is_authenticated %}
+                    <div class="mt-3">
+                        {% if is_following %}
+                            <a href="{% url 'users:unfollow' profile_user.username %}" class="btn btn-outline-secondary btn-sm">取消关注</a>
+                        {% else %}
+                            <a href="{% url 'users:follow' profile_user.username %}" class="btn btn-outline-primary btn-sm">关注</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- 编辑资料按钮 -->
+                {% if is_own_profile %}
+                    <a href="{% url 'users:edit_profile' %}" class="btn btn-outline-primary btn-sm mt-3">编辑资料</a>
+                {% endif %}
+
+                <!-- 博客标题与描述 -->
+                {% if profile_user.profile.blog_title %}
+                    <h5 class="mt-3">{{ profile_user.profile.blog_title }}</h5>
+                {% endif %}
+                {% if profile_user.profile.blog_description %}
+                    <p class="text-muted small">{{ profile_user.profile.blog_description }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧：文章、关注、粉丝 -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white border-bottom-0">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#articles">文章</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#following">关注的人</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#followers">粉丝</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-3">
+                <div class="tab-content">
+                    <!-- 文章列表 -->
+                    <div class="tab-pane fade show active" id="articles">
+                        {% include 'users/_articles_list.html' %}
+                    </div>
+
+                    <!-- 关注列表 -->
+                    <div class="tab-pane fade" id="following">
+                        {% include 'users/_following_list.html' %}
+                    </div>
+
+                    <!-- 粉丝列表 -->
+                    <div class="tab-pane fade" id="followers">
+                        {% include 'users/_followers_list.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

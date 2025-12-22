@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}邮件系统测试{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>邮件提供商测试</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>发送测试邮件</h3>
+            <form method="post" action="{% url 'core:send_test_email' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="recipient" class="form-label">收件人邮箱</label>
+                    <input type="email" class="form-control" id="recipient" name="recipient" required>
+                </div>
+                <div class="mb-3">
+                    <label for="provider" class="form-label">邮件提供商</label>
+                    <select class="form-select" id="provider" name="provider">
+                        <option value="AUTO">自动选择（带备用）</option>
+                        <option value="GMAIL">Gmail API</option>
+                        <option value="QQ">QQ邮箱</option>
+                        <option value="SENDGRID">SendGrid</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">发送测试邮件</button>
+            </form>
+        </div>
+        
+        <div class="col-md-6">
+            <h3>测试所有提供商</h3>
+            <button type="button" class="btn btn-info" onclick="testAllProviders()">
+                测试所有邮件提供商
+            </button>
+            <div id="test-results" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function testAllProviders() {
+    fetch('{% url "core:test_email_providers" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        let html = '<div class="card"><div class="card-header">测试结果</div><div class="card-body">';
+        
+        for (const [provider, result] of Object.entries(data.results)) {
+            const statusClass = result.status === 'success' ? 'success' : 
+                               result.status === 'error' ? 'danger' : 'warning';
+            html += `
+                <div class="alert alert-${statusClass} mb-2">
+                    <strong>${provider}:</strong>${result.status}<br>
+                    <small>${result.message}</small>
+                </div>
+            `;
+        }
+        
+        html += '</div></div>';
+        document.getElementById('test-results').innerHTML = html;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('test-results').innerHTML = 
+            '<div class="alert alert-danger">测试失败: ' + error.message + '</div>';
+    });
+}
+</script>
+{% endblock %}

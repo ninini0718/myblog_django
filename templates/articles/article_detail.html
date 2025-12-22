@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<article class="mb-5">
+    <header class="mb-4">
+        <h1>{{ article.title }}</h1>
+        <div class="text-muted">
+            <i class="far fa-user"></i> {{ article.author.nickname|default:article.author.username }}
+            <i class="far fa-calendar"></i> {{ article.created_at|date:"Y-m-d H:i" }}
+            <i class="far fa-folder"></i>
+            {% if article.category %}
+                <a href="{% url 'articles:article_list' %}?category={{ article.category.slug }}">{{ article.category.name }}</a>
+            {% else %}
+                未分类
+            {% endif %}
+            <i class="far fa-eye"></i> {{ article.views }}
+            <i class="far fa-heart"></i> <span id="article-likes">{{ article.likes }}</span>
+
+            {% if article.author == request.user or request.user.is_superuser %}
+            <div class="float-end">
+                <a href="{% url 'articles:edit_article' article.slug %}" class="btn btn-sm btn-warning">编辑</a>
+                <a href="{% url 'articles:delete_article' article.slug %}" class="btn btn-sm btn-danger">删除</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if article.image %}
+    <div class="text-center mb-4">
+        <img src="{{ article.image.url }}" class="img-fluid" alt="{{ article.title }}">
+    </div>
+    {% endif %}
+
+    <div class="article-content">
+        {{ article.content_html|safe }}
+    </div>
+
+    <!-- 分享区域 -->
+    <div class="social-share mt-4">
+        <p>分享到：</p>
+        <!-- 微博 -->
+        <a href="https://weibo.com/share/share.php?title={{ article.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" class="btn btn-sm btn-outline-danger me-2">
+            <i class="fab fa-weibo"></i> 微博
+        </a>
+        <!-- 复制链接 -->
+        <button type="button" class="btn btn-sm btn-outline-success me-2" id="copy-share-btn">
+            <i class="fas fa-link"></i> 复制链接
+        </button>
+        <!-- 二维码 -->
+        <button type="button" class="btn btn-sm btn-outline-primary" id="qr-share-btn">
+            <i class="fas fa-qrcode"></i> 二维码
+        </button>
+    </div>
+
+    <!-- 复制提示 -->
+    <div id="share-guide" class="card shadow-sm mt-3" style="max-width:360px; display:none;">
+        <div class="card-body p-3">
+            <h6 class="mb-2">链接已复制 ✅</h6>
+            <p class="mb-2 text-muted" style="font-size:14px;">
+                打开微信或 QQ，粘贴发送即可分享文章
+            </p>
+            <div class="small text-muted">
+                当前链接：<br>
+                <span class="text-break">{{ request.build_absolute_uri }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 标签 -->
+    <div class="mt-4">
+        {% for tag in article.tags.all %}
+        <a href="{% url 'articles:article_list' %}?tag={{ tag.slug }}" class="badge bg-secondary text-decoration-none">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- 点赞 -->
+    <div class="mt-4">
+        <button id="like-article" class="btn btn-outline-danger" data-url="{% url 'articles:like_article' article.slug %}" data-csrf="{{ csrf_token }}">
+            <i class="far fa-heart"></i> 点赞 (<span id="article-likes">{{ article.likes }}</span>)
+        </button>
+    </div>
+</article>
+
+<!-- 二维码分享弹窗 -->
+<div id="qr-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1050;">
+    <div style="background:#fff; width:300px; margin:10% auto; border-radius:8px; padding:20px; text-align:center; position:relative;">
+        <button id="close-qr" style="position:absolute; top:8px; right:10px; border:none; background:none; font-size:20px;">×</button>
+        <h6 class="mb-3">扫码分享文章</h6>
+        <img id="qr-image" src="" alt="分享二维码" style="width:200px;height:200px;">
+        <p class="text-muted mt-2" style="font-size:14px;">使用微信 / QQ 扫一扫</p>
+    </div>
+</div>
+
+<!-- 评论区 -->
+<section class="comments">
+    <h3>评论 ({{ comments.count }})</h3>
+
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'comments:add_comment' article.id %}" class="mb-4 main-comment-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-2 position-relative">
+            <textarea name="content" class="form-control comment-textarea" rows="3" placeholder="写下你的评论..." required></textarea>
+            <button type="button" class="btn btn-sm btn-light emoji-btn" style="position:absolute; right:10px; bottom:10px; z-index:3;">😊</button>
+            <div class="emoji-panel d-none">
+                <span>😄</span><span>😆</span><span>😂</span><span>🤣</span>
+                <span>😊</span><span>😍</span><span>😭</span><span>😡</span>
+                <span>👍</span><span>👎</span><span>🎉</span><span>❤️</span>
+                <span>🔥</span>
+            </div>
+        </div>
+        <div class="mb-2">
+            <input type="file" name="image" accept="image/*" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">发表评论</button>
+    </form>
+    {% else %}
+    <p>请<a href="{% url 'account_login' %}">登录</a>后发表评论</p>
+    {% endif %}
+
+    <!-- 评论列表 -->
+    <div class="comment-list">
+        {% for comment in comments %}
+        {% if not comment.parent %}
+        <div class="card mb-3" id="comment-{{ comment.id }}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <img src="{{ comment.author.avatar.url }}" alt="Avatar" class="rounded-circle me-1" width="25">
+                        {{ comment.author.nickname|default:comment.author.username }}
+                        <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+                    </h6>
+                    <div>
+                        <button class="btn btn-sm btn-outline-danger like-comment" data-comment-id="{{ comment.id }}">
+                            <i class="far fa-heart"></i> (<span class="comment-likes">{{ comment.likes }}</span>)
+                        </button>
+                        {% if comment.author == request.user or request.user.is_superuser %}
+                        <a href="{% url 'comments:delete_comment' comment.id %}" class="btn btn-sm btn-outline-danger">删除</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="card-text">{{ comment.content|linebreaks }}</p>
+
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-link reply-btn" data-comment-id="{{ comment.id }}">回复</button>
+                <div class="reply-form mt-2" id="reply-form-{{ comment.id }}" style="display:none;">
+                    <form method="post" action="{% url 'comments:add_comment' article.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <div class="mb-2">
+                            <textarea name="content" class="form-control" rows="2" placeholder="回复 {{ comment.author.nickname|default:comment.author.username }}..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">回复</button>
+                        <button type="button" class="btn btn-sm btn-secondary cancel-reply">取消</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                {% for reply in comment.replies.all %}
+                <div class="card mt-2" id="comment-{{ reply.id }}">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <img src="{{ reply.author.avatar.url }}" alt="Avatar" class="rounded-circle me-1" width="20">
+                            {{ reply.author.nickname|default:reply.author.username }}
+                            <small>{{ reply.created_at|date:"Y-m-d H:i" }}</small>
+                        </h6>
+                        <p class="card-text">{{ reply.content|linebreaks }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <p>暂无评论，快来抢沙发吧！</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/comments.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 复制链接
+    const copyBtn = document.getElementById("copy-share-btn");
+    const guide = document.getElementById("share-guide");
+    if(copyBtn){
+        copyBtn.addEventListener("click", function() {
+            const url = "{{ request.build_absolute_uri }}";
+            navigator.clipboard.writeText(url).then(()=>{ guide.style.display = "block"; }).catch(()=>{ alert("复制失败，请手动复制地址栏"); });
+        });
+    }
+
+    // 二维码弹窗 + 自动生成缓存二维码
+    const qrBtn = document.getElementById("qr-share-btn");
+    const qrModal = document.getElementById("qr-modal");
+    const closeQr = document.getElementById("close-qr");
+    const qrImg = document.getElementById("qr-image");
+    if(qrBtn){
+        qrBtn.addEventListener("click", function() {
+            // 每次点击都会请求后端 article_qrcode view，它会自动处理缓存和过期重建
+            qrImg.src = "{% url 'articles:article_qrcode' article.slug %}?t=" + Date.now();
+            qrModal.style.display = "block";
+        });
+    }
+    closeQr.addEventListener("click",()=>{ qrModal.style.display = "none"; });
+    qrModal.addEventListener("click",(e)=>{ if(e.target===qrModal){ qrModal.style.display="none"; } });
+
+    // 评论回复表单展开/收起
+    document.querySelectorAll(".reply-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            const form = document.getElementById("reply-form-"+btn.dataset.commentId);
+            form.style.display = (form.style.display==="none")?"block":"none";
+        });
+    });
+    document.querySelectorAll(".cancel-reply").forEach(btn=>{
+        btn.addEventListener("click",()=>{ btn.closest(".reply-form").style.display="none"; });
+    });
+});
+</script>
+{% endblock %}

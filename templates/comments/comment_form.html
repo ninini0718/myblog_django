@@ -1,0 +1,83 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<div class="comment-form-container">
+    <h4>发表评论</h4>
+    {% if user.is_authenticated %}
+        <form method="post"
+              action="{% url 'comments:create' %}"
+              class="comment-form main-comment-form"
+              id="comment-form"
+              data-article-id="{{ article.id }}"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="article_id" value="{{ article.id }}">
+            {% if parent_comment %}
+                <input type="hidden" name="parent_id" value="{{ parent_comment.id }}">
+                <div class="alert alert-info">
+                    回复给 <strong>{{ parent_comment.author.username }}</strong>:
+                    {{ parent_comment.content|truncatewords:20 }}
+                    <button type="button" class="btn btn-sm btn-link float-end" onclick="cancelReply()">取消回复</button>
+                </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label for="{{ form.content.id_for_label }}" class="form-label">评论内容</label>
+                {{ form.content|add_class:"form-control"|attr:"rows:4"|attr:"placeholder:写下你的评论..." }}
+                {% if form.content.errors %}
+                    <div class="text-danger">{{ form.content.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleEmoji()">😊 表情</button>
+                <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                    <!-- 常用表情 -->
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('😀')">😀</button>
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('😂')">😂</button>
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('❤️')">❤️</button>
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('👍')">👍</button>
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('🎉')">🎉</button>
+                    <button type="button" class="emoji-btn" onclick="insertEmoji('🔥')">🔥</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image" class="form-label">上传图片</label>
+                <input type="file" name="image" id="id_image" accept="image/*" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> 发表评论
+            </button>
+        </form>
+    {% else %}
+        <div class="alert alert-info">
+            请 <a href="{% url 'users:login' %}?next={{ request.path }}">登录</a> 后发表评论
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.comment-form-container { background:#f8f9fa; padding:20px; border-radius:8px; margin-bottom:20px; }
+.emoji-picker { background:white; border:1px solid #ddd; border-radius:4px; padding:10px; margin-top:5px; display:flex; flex-wrap:wrap; gap:5px; }
+.emoji-btn { background:none; border:none; font-size:20px; cursor:pointer; padding:5px; border-radius:4px; }
+.emoji-btn:hover { background:#f0f0f0; }
+</style>
+
+<script>
+function toggleEmoji() {
+    const picker = document.getElementById('emoji-picker');
+    picker.style.display = picker.style.display==='none'?'block':'none';
+}
+function insertEmoji(emoji) {
+    const textarea = document.getElementById('{{ form.content.id_for_label }}');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    textarea.value = text.substring(0,start)+emoji+text.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start+emoji.length;
+    textarea.focus();
+}
+function cancelReply() { window.location.href='{{ article.get_absolute_url }}'; }
+</script>
