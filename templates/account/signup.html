@@ -14,70 +14,112 @@
         justify-content: center;
         padding: 20px;
     }
-    
+
     .signup-form {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
         width: 100%;
         max-width: 450px;
+        overflow: hidden;
     }
-    
+
     .signup-header {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         color: white;
         text-align: center;
-        padding: 30px 20px;
+        padding: 34px 24px;
     }
-    
+
+    .signup-header h3 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
     .signup-body {
-        padding: 40px 30px;
+        padding: 42px 32px;
     }
-    
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
     .form-control {
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 12px 15px;
         border: 1px solid #e1e5eb;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    
+
     .form-control:focus {
         border-color: #f093fb;
         box-shadow: 0 0 0 0.25rem rgba(240, 147, 251, 0.25);
     }
-    
+
     .btn-signup {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 12px;
         font-weight: 600;
         width: 100%;
         margin-top: 10px;
+        box-shadow: 0 8px 18px rgba(240, 147, 251, 0.35);
+        transition: transform 0.2s ease,
+                    box-shadow 0.2s ease,
+                    opacity 0.2s ease;
     }
-    
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(240, 147, 251, 0.45);
+        opacity: 0.95;
+    }
+
+    .btn-signup:active {
+        transform: translateY(0);
+        box-shadow: 0 6px 12px rgba(240, 147, 251, 0.3);
+        opacity: 0.9;
+    }
+
     .password-strength {
-        height: 5px;
-        border-radius: 5px;
+        height: 6px;
+        border-radius: 6px;
         margin-top: -10px;
-        margin-bottom: 15px;
-        transition: all 0.3s;
+        margin-bottom: 16px;
+        transition: width 0.3s ease, background-color 0.3s ease;
     }
-    
+
     .strength-weak {
         background-color: #dc3545;
         width: 33%;
     }
-    
+
     .strength-medium {
         background-color: #ffc107;
         width: 66%;
     }
-    
+
     .strength-strong {
         background-color: #28a745;
         width: 100%;
+    }
+
+    .form-check-label a {
+        color: #f5576c;
+        transition: color 0.2s ease;
+    }
+
+    .form-check-label a:hover {
+        color: #d63384;
+        text-decoration: underline;
+    }
+
+    .alert-danger p {
+        margin-bottom: 6px;
+        font-size: 14px;
     }
 </style>
 {% endblock %}
@@ -89,11 +131,11 @@
             <h3 class="mb-0">创建账户</h3>
             <p class="mb-0 mt-2">加入我们的社区</p>
         </div>
-        
+
         <div class="signup-body">
             <form method="POST" action="{% url 'account_signup' %}" id="signup-form">
                 {% csrf_token %}
-                
+
                 {% if form.errors %}
                     <div class="alert alert-danger">
                         {% for field, errors in form.errors.items %}
@@ -103,41 +145,48 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                
+
                 <div class="mb-3">
                     <label for="id_username" class="form-label">用户名</label>
                     <input type="text" name="username" placeholder="请输入用户名" class="form-control" required id="id_username">
                     <div class="form-text">用户名只能包含字母、数字和@/./+/-/_字符</div>
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="id_email" class="form-label">电子邮箱</label>
                     <input type="email" name="email" placeholder="请输入电子邮箱" class="form-control" required id="id_email">
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="id_password1" class="form-label">密码</label>
                     <input type="password" name="password1" placeholder="请输入密码" class="form-control" required id="id_password1">
                     <div class="password-strength" id="password-strength"></div>
                     <div class="form-text">密码至少8个字符，不能全是数字</div>
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="id_password2" class="form-label">确认密码</label>
                     <input type="password" name="password2" placeholder="请再次输入密码" class="form-control" required id="id_password2">
                 </div>
-                
+
                 <div class="mb-3 form-check">
                     <input type="checkbox" name="terms" class="form-check-input" required id="id_terms">
                     <label for="id_terms" class="form-check-label">
-                        我已阅读并同意 <a href="#" class="text-decoration-none">服务条款</a> 和 <a href="#" class="text-decoration-none">隐私政策</a>
+                        我已阅读并同意
+                        <a href="#" class="text-decoration-none">服务条款</a>
+                        和
+                        <a href="#" class="text-decoration-none">隐私政策</a>
                     </label>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary btn-signup">注册</button>
-                
+
                 <div class="text-center mt-4">
-                    <p>已有账户？ <a href="{% url 'account_login' %}" class="text-decoration-none">立即登录</a></p>
+                    <p>已有账户？
+                        <a href="{% url 'account_login' %}" class="text-decoration-none">
+                            立即登录
+                        </a>
+                    </p>
                 </div>
             </form>
         </div>
@@ -150,23 +199,19 @@
     document.addEventListener('DOMContentLoaded', function() {
         const password1 = document.getElementById('id_password1');
         const passwordStrength = document.getElementById('password-strength');
-        
+
         password1.addEventListener('input', function() {
             const password = this.value;
             let strength = 0;
-            
-            // 长度检查
+
             if (password.length >= 8) strength += 1;
             if (password.length >= 12) strength += 1;
-            
-            // 复杂度检查
             if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
             if (/[0-9]/.test(password)) strength += 1;
             if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
-            
-            // 更新强度指示器
+
             passwordStrength.className = 'password-strength';
-            
+
             if (password.length > 0) {
                 if (strength <= 2) {
                     passwordStrength.classList.add('strength-weak');

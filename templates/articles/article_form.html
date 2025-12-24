@@ -3,12 +3,107 @@
 
 {% block title %}{{ title }} - {{ block.super }}{% endblock %}
 
+{% block extra_css %}
+<style>
+/* 整体容器美化 */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+/* 标题 */
+.container h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+}
+
+/* 表单美化 */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 表单字段 */
+form p {
+    margin-bottom: 20px;
+}
+
+form input, form textarea, form select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #e1e5eb;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    outline: none;
+}
+
+/* MarkdownX 编辑器特效 */
+.markdownx {
+    border-radius: 10px !important;
+    border: 1px solid #e1e5eb !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.markdownx-editor, .markdownx-preview {
+    border-radius: 10px !important;
+}
+
+/* 保存按钮 */
+.btn-primary {
+    background: linear-gradient(135deg, #6c63ff 0%, #9f7fff 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+    .btn-primary {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>{{ title }}</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.media }} {# <-- 2. 添加这一行，包含markdownx的CSS和JS #}
+        {{ form.media }} {# 包含 MarkdownX 的 CSS 和 JS #}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">保存</button>
     </form>

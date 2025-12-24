@@ -3,6 +3,163 @@
 
 {% block title %}{{ article.title }}{% endblock %}
 
+{% block extra_css %}
+<style>
+/* 整体文章容器美化 */
+article {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    transition: all 0.3s ease;
+}
+
+article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+/* 文章标题 */
+article h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* 作者信息区 */
+article header .text-muted {
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 2;
+}
+
+article header .text-muted i {
+    margin-right: 5px;
+}
+
+article header a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+article header a:hover {
+    text-decoration: underline;
+}
+
+/* 编辑删除按钮 */
+article header .float-end .btn {
+    margin-left: 5px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+article header .float-end .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* 文章图片 */
+article .img-fluid {
+    border-radius: 15px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+/* 文章内容 */
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+/* 分享按钮 */
+.social-share .btn {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.social-share .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* 标签 */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.8em;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 点赞按钮 */
+#like-article {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+#like-article:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* 评论区 */
+.comments {
+    margin-top: 50px;
+}
+
+.comments h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 评论卡片 */
+.comment-list .card {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.comment-list .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* 评论者头像 */
+.comment-list img.rounded-circle {
+    border: 2px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.comment-list img.rounded-circle:hover {
+    border-color: #007bff;
+}
+
+/* 回复按钮 */
+.reply-btn {
+    font-size: 0.85rem;
+    color: #007bff;
+}
+
+.reply-btn:hover {
+    text-decoration: underline;
+}
+
+/* 二维码弹窗 */
+#qr-modal div {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <article class="mb-5">
     <header class="mb-4">
@@ -41,15 +198,14 @@
     <!-- 分享区域 -->
     <div class="social-share mt-4">
         <p>分享到：</p>
-        <!-- 微博 -->
-        <a href="https://weibo.com/share/share.php?title={{ article.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" class="btn btn-sm btn-outline-danger me-2">
+        <a href="https://weibo.com/share/share.php?title={{ article.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}"
+           target="_blank"
+           class="btn btn-sm btn-outline-danger me-2">
             <i class="fab fa-weibo"></i> 微博
         </a>
-        <!-- 复制链接 -->
         <button type="button" class="btn btn-sm btn-outline-success me-2" id="copy-share-btn">
             <i class="fas fa-link"></i> 复制链接
         </button>
-        <!-- 二维码 -->
         <button type="button" class="btn btn-sm btn-outline-primary" id="qr-share-btn">
             <i class="fas fa-qrcode"></i> 二维码
         </button>
@@ -80,13 +236,16 @@
 
     <!-- 点赞 -->
     <div class="mt-4">
-        <button id="like-article" class="btn btn-outline-danger" data-url="{% url 'articles:like_article' article.slug %}" data-csrf="{{ csrf_token }}">
+        <button id="like-article"
+                class="btn btn-outline-danger"
+                data-url="{% url 'articles:like_article' article.slug %}"
+                data-csrf="{{ csrf_token }}">
             <i class="far fa-heart"></i> 点赞 (<span id="article-likes">{{ article.likes }}</span>)
         </button>
     </div>
 </article>
 
-<!-- 二维码分享弹窗 -->
+<!-- 二维码弹窗 -->
 <div id="qr-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1050;">
     <div style="background:#fff; width:300px; margin:10% auto; border-radius:8px; padding:20px; text-align:center; position:relative;">
         <button id="close-qr" style="position:absolute; top:8px; right:10px; border:none; background:none; font-size:20px;">×</button>
@@ -130,7 +289,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h6 class="card-subtitle mb-2 text-muted">
-                        <img src="{{ comment.author.avatar.url }}" alt="Avatar" class="rounded-circle me-1" width="25">
+                        {% if comment.author.avatar %}
+                            <img src="{{ comment.author.avatar.url }}" class="rounded-circle me-1" width="25">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle me-1" width="25">
+                        {% endif %}
                         {{ comment.author.nickname|default:comment.author.username }}
                         <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
                     </h6>
@@ -143,6 +306,7 @@
                         {% endif %}
                     </div>
                 </div>
+
                 <p class="card-text">{{ comment.content|linebreaks }}</p>
 
                 {% if user.is_authenticated %}
@@ -152,7 +316,9 @@
                         {% csrf_token %}
                         <input type="hidden" name="parent_id" value="{{ comment.id }}">
                         <div class="mb-2">
-                            <textarea name="content" class="form-control" rows="2" placeholder="回复 {{ comment.author.nickname|default:comment.author.username }}..." required></textarea>
+                            <textarea name="content" class="form-control" rows="2"
+                                      placeholder="回复 {{ comment.author.nickname|default:comment.author.username }}..."
+                                      required></textarea>
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary">回复</button>
                         <button type="button" class="btn btn-sm btn-secondary cancel-reply">取消</button>
@@ -164,7 +330,11 @@
                 <div class="card mt-2" id="comment-{{ reply.id }}">
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">
-                            <img src="{{ reply.author.avatar.url }}" alt="Avatar" class="rounded-circle me-1" width="20">
+                            {% if reply.author.avatar %}
+                                <img src="{{ reply.author.avatar.url }}" class="rounded-circle me-1" width="20">
+                            {% else %}
+                                <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle me-1" width="20">
+                            {% endif %}
                             {{ reply.author.nickname|default:reply.author.username }}
                             <small>{{ reply.created_at|date:"Y-m-d H:i" }}</small>
                         </h6>
@@ -186,41 +356,30 @@
 <script src="{% static 'js/comments.js' %}"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 复制链接
     const copyBtn = document.getElementById("copy-share-btn");
     const guide = document.getElementById("share-guide");
     if(copyBtn){
         copyBtn.addEventListener("click", function() {
             const url = "{{ request.build_absolute_uri }}";
-            navigator.clipboard.writeText(url).then(()=>{ guide.style.display = "block"; }).catch(()=>{ alert("复制失败，请手动复制地址栏"); });
+            navigator.clipboard.writeText(url)
+                .then(()=>{ guide.style.display = "block"; })
+                .catch(()=>{ alert("复制失败，请手动复制地址栏"); });
         });
     }
 
-    // 二维码弹窗 + 自动生成缓存二维码
     const qrBtn = document.getElementById("qr-share-btn");
     const qrModal = document.getElementById("qr-modal");
     const closeQr = document.getElementById("close-qr");
     const qrImg = document.getElementById("qr-image");
+
     if(qrBtn){
         qrBtn.addEventListener("click", function() {
-            // 每次点击都会请求后端 article_qrcode view，它会自动处理缓存和过期重建
             qrImg.src = "{% url 'articles:article_qrcode' article.slug %}?t=" + Date.now();
             qrModal.style.display = "block";
         });
     }
     closeQr.addEventListener("click",()=>{ qrModal.style.display = "none"; });
     qrModal.addEventListener("click",(e)=>{ if(e.target===qrModal){ qrModal.style.display="none"; } });
-
-    // 评论回复表单展开/收起
-    document.querySelectorAll(".reply-btn").forEach(btn=>{
-        btn.addEventListener("click",()=>{
-            const form = document.getElementById("reply-form-"+btn.dataset.commentId);
-            form.style.display = (form.style.display==="none")?"block":"none";
-        });
-    });
-    document.querySelectorAll(".cancel-reply").forEach(btn=>{
-        btn.addEventListener("click",()=>{ btn.closest(".reply-form").style.display="none"; });
-    });
 });
 </script>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% load static %}
 
-<div class="notifications-panel">
-    <h4 class="mb-3">
+<div class="notifications-panel card shadow-sm p-3">
+    <h4 class="mb-3 notifications-title">
         <i class="fas fa-bell"></i> 评论通知
         {% if unread_count > 0 %}
             <span class="badge bg-danger">{{ unread_count }}</span>
@@ -9,11 +9,11 @@
     </h4>
     
     {% if notifications %}
-        <div class="list-group">
+        <div class="list-group list-group-flush">
             {% for notification in notifications %}
-                <div class="list-group-item {% if not notification.is_read %}unread{% endif %}">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1">
+                <div class="list-group-item notification-item {% if not notification.is_read %}unread{% endif %} rounded mb-2 p-3">
+                    <div class="d-flex w-100 justify-content-between align-items-start">
+                        <h6 class="mb-1 notification-title">
                             {% if notification.type == 'reply' %}
                                 <i class="fas fa-reply text-primary"></i> 
                                 {{ notification.sender.username }} 回复了你的评论
@@ -25,18 +25,16 @@
                                 {{ notification.sender.username }} 提到了你
                             {% endif %}
                         </h6>
-                        <small>{{ notification.created_at|naturaltime }}</small>
+                        <small class="text-muted notification-time">{{ notification.created_at|naturaltime }}</small>
                     </div>
                     
-                    <p class="mb-1">{{ notification.message|truncatewords:20 }}</p>
+                    <p class="mb-2 notification-message">{{ notification.message|truncatewords:20 }}</p>
                     
-                    <div class="mt-2">
-                        <a href="{{ notification.get_absolute_url }}" 
-                           class="btn btn-sm btn-outline-primary">查看</a>
+                    <div class="mt-2 notification-actions">
+                        <a href="{{ notification.get_absolute_url }}" class="btn btn-sm btn-outline-primary me-2">查看</a>
                         
                         {% if not notification.is_read %}
-                            <button class="btn btn-sm btn-outline-secondary" 
-                                    onclick="markAsRead({{ notification.id }})">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="markAsRead({{ notification.id }})">
                                 标记已读
                             </button>
                         {% endif %}
@@ -68,7 +66,7 @@
             </nav>
         {% endif %}
     {% else %}
-        <div class="text-center py-4">
+        <div class="text-center py-5 no-notifications">
             <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
             <p class="text-muted">暂无通知</p>
         </div>
@@ -79,24 +77,53 @@
 .notifications-panel {
     max-height: 500px;
     overflow-y: auto;
+    background-color: #fdfdfd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 15px;
+}
+
+.notifications-title {
+    font-weight: 600;
+    color: #343a40;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+}
+
+.notification-item {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .unread {
+    border-left: 4px solid #007bff;
+    background-color: #e7f1ff;
+}
+
+.notification-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.notification-message {
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+.notification-actions button,
+.notification-actions a {
+    font-size: 0.8rem;
+}
+
+.no-notifications {
     background-color: #f8f9fa;
-    border-left: 3px solid #007bff;
-}
-
-.list-group-item {
-    border-left: none;
-    border-right: none;
-}
-
-.list-group-item:first-child {
-    border-top: none;
-}
-
-.list-group-item:last-child {
-    border-bottom: none;
+    border-radius: 12px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
 }
 </style>
 

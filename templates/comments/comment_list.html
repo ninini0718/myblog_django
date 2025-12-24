@@ -1,23 +1,23 @@
 {% load static %}
 {% load humanize %}
 
-<div class="comments-section">
-    <h3>
+<div class="comments-section anime-comments-section">
+    <h3 class="anime-comments-title">
         <i class="fas fa-comments"></i> 评论 ({{ total_comments }})
     </h3>
     
     <!-- 评论排序选项 -->
-    <div class="comment-sort mb-3">
+    <div class="comment-sort mb-3 anime-comment-sort">
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-sm {% if sort_by == 'newest' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+            <button type="button" class="btn btn-sm {% if sort_by == 'newest' %}btn-primary anime-btn-active{% else %}btn-outline-secondary{% endif %}" 
                     onclick="sortComments('newest')">
                 最新
             </button>
-            <button type="button" class="btn btn-sm {% if sort_by == 'oldest' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+            <button type="button" class="btn btn-sm {% if sort_by == 'oldest' %}btn-primary anime-btn-active{% else %}btn-outline-secondary{% endif %}" 
                     onclick="sortComments('oldest')">
                 最早
             </button>
-            <button type="button" class="btn btn-sm {% if sort_by == 'popular' %}btn-primary{% else %}btn-outline-secondary{% endif %}" 
+            <button type="button" class="btn btn-sm {% if sort_by == 'popular' %}btn-primary anime-btn-active{% else %}btn-outline-secondary{% endif %}" 
                     onclick="sortComments('popular')">
                 最热
             </button>
@@ -25,11 +25,11 @@
     </div>
     
     <!-- 评论列表 -->
-    <div class="comments-list" id="comments-list">
+    <div class="comments-list anime-comments-list" id="comments-list">
         {% for comment in comments %}
             {% include 'comments/comment_item.html' with comment=comment %}
         {% empty %}
-            <div class="no-comments text-center py-4">
+            <div class="no-comments text-center py-4 anime-no-comments">
                 <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
                 <p class="text-muted">还没有评论，来发表第一个评论吧！</p>
             </div>
@@ -39,28 +39,28 @@
     <!-- 分页 -->
     {% if is_paginated %}
         <nav aria-label="评论分页">
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center anime-pagination">
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1&sort={{ sort_by }}">首页</a>
+                        <a class="page-link anime-page-link" href="?page=1&sort={{ sort_by }}">首页</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&sort={{ sort_by }}">上一页</a>
+                        <a class="page-link anime-page-link" href="?page={{ page_obj.previous_page_number }}&sort={{ sort_by }}">上一页</a>
                     </li>
                 {% endif %}
                 
                 <li class="page-item active">
-                    <span class="page-link">
+                    <span class="page-link anime-page-link">
                         第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
                     </span>
                 </li>
                 
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ sort_by }}">下一页</a>
+                        <a class="page-link anime-page-link" href="?page={{ page_obj.next_page_number }}&sort={{ sort_by }}">下一页</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&sort={{ sort_by }}">末页</a>
+                        <a class="page-link anime-page-link" href="?page={{ page_obj.paginator.num_pages }}&sort={{ sort_by }}">末页</a>
                     </li>
                 {% endif %}
             </ul>
@@ -69,22 +69,73 @@
 </div>
 
 <style>
-.comments-section {
+/* 二次元风格评论区 */
+.anime-comments-section {
     margin-top: 30px;
+    font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+    color: #333;
 }
 
-.comment-sort {
-    border-bottom: 1px solid #eee;
+.anime-comments-title {
+    font-size: 1.8rem;
+    color: #ff4081;
+    text-shadow: 1px 1px 2px #ffe6f0;
+    margin-bottom: 20px;
+}
+
+.anime-comment-sort {
+    border-bottom: 2px solid #ffe6f0;
     padding-bottom: 10px;
 }
 
-.no-comments {
-    background: #f8f9fa;
-    border-radius: 8px;
+.anime-btn-active {
+    background: #ff80ab !important;
+    color: white !important;
+    border-color: #ff80ab !important;
+    box-shadow: 0 3px 6px rgba(255,64,129,0.3);
+    transition: all 0.2s ease;
 }
 
-.comments-list {
+.anime-btn-active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255,64,129,0.4);
+}
+
+.anime-comments-list {
     margin-top: 20px;
+}
+
+.anime-no-comments {
+    background: #fff0f5;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(255,64,129,0.2);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.anime-no-comments i {
+    color: #ff80ab;
+}
+
+.anime-no-comments:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255,64,129,0.25);
+}
+
+.anime-pagination .page-link {
+    border-radius: 50%;
+    margin: 0 3px;
+    border: 1px solid #ff80ab;
+    color: #ff4081;
+    background: #fff0f5;
+    transition: all 0.2s;
+}
+
+.anime-pagination .page-link:hover {
+    background: #ff80ab;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(255,64,129,0.2);
 }
 </style>
 
