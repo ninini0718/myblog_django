@@ -1,0 +1,17 @@
+{% load static %}
+
+{% if user.avatar %}
+    <img src="{{ user.avatar.url }}"
+         class="rounded-circle {{ class|default:'' }}"
+         width="{{ size|default:32 }}"
+         height="{{ size|default:32 }}"
+         style="object-fit:cover;"
+         alt="avatar">
+{% else %}
+    <img src="{% static 'images/default_avatar.png' %}"
+         class="rounded-circle {{ class|default:'' }}"
+         width="{{ size|default:32 }}"
+         height="{{ size|default:32 }}"
+         style="object-fit:cover;"
+         alt="avatar">
+{% endif %}

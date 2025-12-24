@@ -3,11 +3,154 @@
 
 {% block title %}文章列表{% endblock %}
 
+{% block extra_css %}
+<style>
+/* 二次元风格整体 */
+body {
+    background: #fce4ec; /* 可爱粉色背景 */
+    font-family: 'Comic Sans MS', 'Segoe UI', 'Arial', sans-serif;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+    color: #ff4081;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #e91e63;
+}
+
+/* 文章卡片 */
+.card {
+    border: 2px solid #ff80ab;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(255,64,129,0.2);
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(255,64,129,0.3);
+}
+
+.card-title a {
+    color: #d81b60;
+    font-weight: 700;
+}
+
+.card-title a:hover {
+    color: #f50057;
+}
+
+/* 标签和分类按钮 */
+.btn-outline-primary, .btn-outline-secondary {
+    border-radius: 50px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    border-width: 2px;
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,64,129,0.3);
+}
+
+.badge {
+    border-radius: 12px;
+    background: linear-gradient(45deg, #ff4081, #f50057);
+    color: white;
+}
+
+/* 搜索框 */
+.input-group input {
+    border-radius: 25px 0 0 25px;
+    border: 2px solid #ff80ab;
+    padding: 10px 15px;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #ff4081;
+    box-shadow: 0 0 0 0.25rem rgba(255,64,129,0.25);
+}
+
+.input-group .btn-outline-secondary {
+    border-radius: 0 25px 25px 0;
+    border: 2px solid #ff80ab;
+    background: #fff;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background: #ff80ab;
+    color: #fff;
+}
+
+/* 创建文章按钮 */
+.btn-primary.btn-lg {
+    background: linear-gradient(135deg, #ff80ab, #ff4081);
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(255,64,129,0.3);
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255,64,129,0.4);
+}
+
+/* 分页 */
+.pagination .page-item .page-link {
+    border-radius: 50%;
+    border: 2px solid #ff80ab;
+    color: #ff4081;
+    font-weight: bold;
+    margin: 0 3px;
+}
+
+.pagination .page-item.active .page-link {
+    background: #ff4081;
+    color: #fff;
+    border-color: #ff4081;
+}
+
+/* 侧边栏卡片 */
+.col-lg-4 .card {
+    background: linear-gradient(135deg, #fff0f5, #ffe6f0);
+    border: 2px solid #ff80ab;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(255,64,129,0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #ff80ab, #ff4081);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #ff80ab;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .input-group input, .input-group .btn-outline-secondary {
+        border-radius: 25px !important;
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-lg-8">
         <h1 class="mb-4">文章列表</h1>
-        <a href="{% url 'articles:create_article' %}" class="btn btn-primary btn-lg rounded shadow">创建文章</a>
+        <a href="{% url 'articles:create_article' %}" class="btn btn-primary btn-lg rounded shadow mb-3">创建文章</a>
 
         <!-- 搜索框 -->
         <form method="get" class="mb-4">
@@ -17,7 +160,7 @@
             </div>
         </form>
 
-        <!-- 排序功能新增开始 -->
+        <!-- 排序 -->
         <div class="mb-3">
             <span>排序方式：</span>
             <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_slug %}category={{ category_slug }}&{% endif %}{% if tag_slug %}tag={{ tag_slug }}&{% endif %}sort=created"
@@ -27,7 +170,6 @@
             <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_slug %}category={{ category_slug }}&{% endif %}{% if tag_slug %}tag={{ tag_slug }}&{% endif %}sort=likes"
                class="btn btn-outline-secondary btn-sm {% if sort == 'likes' %}active{% endif %}">点赞</a>
         </div>
-        <!-- 排序功能新增结束 -->
 
         <!-- 文章列表 -->
         {% for article in page_obj %}
@@ -39,7 +181,7 @@
                 <h2 class="card-title">
                     <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
                     {% if article.is_top %}
-                    <span class="badge bg-danger">置顶</span>
+                    <span class="badge">置顶</span>
                     {% endif %}
                 </h2>
                 <p class="card-text text-muted">
@@ -59,7 +201,7 @@
             </div>
             <div class="card-footer text-muted">
                 {% for tag in article.tags.all %}
-                <a href="?tag={{ tag.slug }}" class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+                <a href="?tag={{ tag.slug }}" class="badge">{{ tag.name }}</a>
                 {% endfor %}
             </div>
         </article>
@@ -95,6 +237,7 @@
         </nav>
     </div>
 
+    <!-- 侧边栏 -->
     <div class="col-lg-4">
         <!-- 分类 -->
         <div class="card mb-4">

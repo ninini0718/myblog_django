@@ -3,6 +3,95 @@
 
 {% block title %}确认删除 - {{ block.super }}{% endblock %}
 
+{% block extra_css %}
+<style>
+/* 页面整体容器美化 */
+.container {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    padding: 40px 20px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    margin: 60px auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 标题 */
+.container h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+
+/* 段落说明 */
+.container p {
+    font-size: 1.2rem;
+    color: #fffdfd;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* 表单按钮通用风格 */
+button.btn-danger,
+a.btn-secondary {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* 确认删除按钮 */
+button.btn-danger {
+    background: linear-gradient(135deg, #f85032 0%, #e73827 100%);
+    color: white;
+}
+
+button.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    opacity: 0.95;
+}
+
+button.btn-danger:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* 取消按钮 */
+a.btn-secondary {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    text-decoration: none;
+    opacity: 0.95;
+}
+
+a.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>确认删除</h1>

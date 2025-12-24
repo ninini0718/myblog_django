@@ -9086,3 +9086,655 @@ widget_tweaks
 "GET /static/css/light.css HTTP/1.1" 404 1966
 "GET / HTTP/1.1" 200 25008
 "GET /static/css/light.css HTTP/1.1" 404 1966
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24083
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 304 0
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 304 0
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 304 0
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 304 0
+"GET /media/article_images/IMG_20251120_135531_mChfdJj.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 19696
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24083
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /media/article_images/IMG_20251120_135531_mChfdJj.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 19696
+"GET / HTTP/1.1" 200 24081
+"GET /static/css/light.css HTTP/1.1" 404 1966
+Internal Server Error: /01/
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 892, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\articles\views.py", line 92, in article_detail
+    return render(request, 'articles/article_detail.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1077, in render
+    output = self.filter_expression.resolve(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 723, in resolve
+    obj = self.var.resolve(context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 856, in resolve
+    value = self._resolve_lookup(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 903, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "E:\myblog\.venv\Lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'avatar' attribute has no file associated with it.
+"GET /01/ HTTP/1.1" 500 238537
+"GET / HTTP/1.1" 200 24081
+"GET /static/css/light.css HTTP/1.1" 404 1966
+Internal Server Error: /01/
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 892, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\articles\views.py", line 92, in article_detail
+    return render(request, 'articles/article_detail.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1077, in render
+    output = self.filter_expression.resolve(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 723, in resolve
+    obj = self.var.resolve(context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 856, in resolve
+    value = self._resolve_lookup(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 903, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "E:\myblog\.venv\Lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'avatar' attribute has no file associated with it.
+"GET /01/ HTTP/1.1" 500 238536
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24082
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 23071
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /static/js/comments.js HTTP/1.1" 304 0
+Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\library.py", line 324, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 21, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 212, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 299, in get_app
+    raise MultipleObjectsReturned
+django.core.exceptions.MultipleObjectsReturned
+"GET /accounts/login/ HTTP/1.1" 500 247550
+"GET /admin/articles/tag/add/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/articles/tag/add/ HTTP/1.1" 200 18442
+"GET /static/admin/css/base.css HTTP/1.1" 304 0
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+"GET /static/admin/js/theme.js HTTP/1.1" 304 0
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+"GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+"GET /static/admin/css/login.css HTTP/1.1" 304 0
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+"POST /admin/login/?next=/admin/articles/tag/add/ HTTP/1.1" 200 18602
+"POST /admin/login/?next=/admin/articles/tag/add/ HTTP/1.1" 200 18599
+"POST /admin/login/?next=/admin/articles/tag/add/ HTTP/1.1" 302 0
+"GET /admin/articles/tag/add/ HTTP/1.1" 200 31896
+"GET /static/admin/css/forms.css HTTP/1.1" 304 0
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+"GET /static/admin/js/core.js HTTP/1.1" 304 0
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+"GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+"GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+"GET /static/admin/js/actions.js HTTP/1.1" 304 0
+"GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+"GET /admin/socialaccount/socialapp/ HTTP/1.1" 200 32151
+"GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+"GET /static/admin/js/filters.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+"GET /admin/socialaccount/socialapp/?o=1 HTTP/1.1" 200 32461
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+"GET /admin/socialaccount/socialapp/1/change/?_changelist_filters=o%3D1 HTTP/1.1" 200 37546
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 304 0
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 304 0
+"GET /static/admin/img/search.svg HTTP/1.1" 304 0
+"GET /admin/socialaccount/socialapp/1/delete/?_changelist_filters=o%3D1 HTTP/1.1" 200 30448
+"GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+"POST /admin/socialaccount/socialapp/1/delete/?_changelist_filters=o%3D1 HTTP/1.1" 302 0
+"GET /admin/socialaccount/socialapp/?o=1 HTTP/1.1" 200 32277
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 25009
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 24360
+"GET /static/css/light.css HTTP/1.1" 404 1966
+Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\django\template\library.py", line 324, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 21, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 212, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\myblog\.venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 299, in get_app
+    raise MultipleObjectsReturned
+django.core.exceptions.MultipleObjectsReturned
+"GET /accounts/login/ HTTP/1.1" 500 247702
+"GET /admin/socialaccount/socialapp/2/change/?_changelist_filters=o%3D1 HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/socialaccount/socialapp/2/change/%3F_changelist_filters%3Do%253D1 HTTP/1.1" 200 18580
+"POST /admin/login/?next=/admin/socialaccount/socialapp/2/change/%3F_changelist_filters%3Do%253D1 HTTP/1.1" 302 0
+"GET /admin/socialaccount/socialapp/2/change/?_changelist_filters=o%3D1 HTTP/1.1" 200 37595
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /admin/socialaccount/socialapp/2/delete/?_changelist_filters=o%3D1 HTTP/1.1" 200 30449
+"POST /admin/socialaccount/socialapp/2/delete/?_changelist_filters=o%3D1 HTTP/1.1" 302 0
+"GET /admin/socialaccount/socialapp/?o=1 HTTP/1.1" 200 30555
+"GET /admin/jsi18n/ HTTP/1.1" 200 9327
+"GET /accounts/login/ HTTP/1.1" 302 0
+"GET /users/profile/ HTTP/1.1" 200 22257
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default-avatar.png HTTP/1.1" 404 2002
+"POST /accounts/logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 24360
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/login/ HTTP/1.1" 200 19701
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/login/ HTTP/1.1" 200 20496
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/login/ HTTP/1.1" 200 21096
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21100
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21098
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21099
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /accounts/confirm-email/ HTTP/1.1" 200 15531
+- Broken pipe from ('127.0.0.1', 56376)
+"GET /accounts/confirm-email/Mg:1vY6Rn:zoDUQzFvGLuys1-TwJT7jx3aTuFvB6nM99VL3hRVudM/ HTTP/1.1" 200 15931
+"POST /accounts/confirm-email/Mg:1vY6S8:EOH1ScvVov28gEVz89S4OaAIGM6zGw8n2v7LuWjsU6Y/ HTTP/1.1" 302 0
+"GET /accounts/login/ HTTP/1.1" 200 21403
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21098
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21099
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/github/login/ HTTP/1.1" 200 15610
+"POST /accounts/github/login/ HTTP/1.1" 302 0
+"GET /accounts/github/login/callback/?code=68e79755afb3bc06a6a2&state=uUQub8WFvwKJbEZJ HTTP/1.1" 302 0
+"GET /accounts/confirm-email/ HTTP/1.1" 200 15763
+"GET /accounts/password/reset/ HTTP/1.1" 200 18823
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/password/reset/ HTTP/1.1" 302 0
+"GET /accounts/password/reset/done/ HTTP/1.1" 200 18183
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/password/reset/key/1-d1al2n-cf8c2ba330f0e31708abf3b006738557/ HTTP/1.1" 302 0
+"GET /accounts/password/reset/key/1-set-password/ HTTP/1.1" 200 16917
+"GET / HTTP/1.1" 200 24081
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/login/ HTTP/1.1" 200 21096
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /accounts/confirm-email/ HTTP/1.1" 200 15531
+"GET /accounts/login/ HTTP/1.1" 200 21096
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21098
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/signup/ HTTP/1.1" 200 21629
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/signup/ HTTP/1.1" 200 21917
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/login/ HTTP/1.1" 200 21096
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 200 21099
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/password/reset/ HTTP/1.1" 200 18823
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/password/reset/ HTTP/1.1" 302 0
+"GET /accounts/password/reset/done/ HTTP/1.1" 200 18183
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /accounts/password/reset/key/1-d1al6f-e81c27aa7b094734836e6eb7ec28608d/ HTTP/1.1" 302 0
+"GET /accounts/password/reset/key/1-set-password/ HTTP/1.1" 200 16917
+"POST /accounts/password/reset/key/1-set-password/ HTTP/1.1" 302 0
+"GET /accounts/password/reset/key/done/ HTTP/1.1" 200 15521
+"GET /accounts/login/ HTTP/1.1" 200 21096
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /users/profile/ HTTP/1.1" 200 22547
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default-avatar.png HTTP/1.1" 404 2002
+"GET /users/profile/edit/ HTTP/1.1" 200 24857
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /users/profile/edit/ HTTP/1.1" 302 0
+"GET /users/profile/ HTTP/1.1" 200 22588
+"GET /static/css/card.css HTTP/1.1" 404 1963
+"GET /static/images/default-avatar.png HTTP/1.1" 404 2002
+"GET /media/blog_backgrounds/IMG_20251221_183514.jpg HTTP/1.1" 200 1297096
+"GET / HTTP/1.1" 200 25010
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET / HTTP/1.1" 200 25010
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 26469
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /01/ HTTP/1.1" 200 26371
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /01/ HTTP/1.1" 200 26371
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 25011
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 26371
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 26372
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /create/ HTTP/1.1" 200 24184
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /create/ HTTP/1.1" 200 24185
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /create/ HTTP/1.1" 200 24184
+"GET /static/css/light.css HTTP/1.1" 404 1966
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24051
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /media/article_images/IMG_20251120_135531_mChfdJj.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 19697
+"GET /?category=travel HTTP/1.1" 200 23125
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /create/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/create/ HTTP/1.1" 200 21164
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /users/profile/ HTTP/1.1" 200 22593
+"GET /static/css/card.css HTTP/1.1" 404 1963
+"GET /static/images/default-avatar.png HTTP/1.1" 404 2002
+"GET /media/blog_backgrounds/IMG_20251221_183514.jpg HTTP/1.1" 304 0
+"GET / HTTP/1.1" 200 24979
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 26373
+"GET /static/js/comments.js HTTP/1.1" 304 0
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /users/profile/ HTTP/1.1" 200 22303
+"GET /static/css/card.css HTTP/1.1" 404 1963
+"GET /static/images/default-avatar.png HTTP/1.1" 404 2002
+"GET /users/profile/edit/ HTTP/1.1" 200 25431
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"POST /users/profile/edit/ HTTP/1.1" 302 0
+"GET /users/profile/ HTTP/1.1" 200 22584
+"GET /static/css/card.css HTTP/1.1" 404 1963
+"GET /media/avatars/IMG_20251221_183453.jpg HTTP/1.1" 200 448836
+"GET / HTTP/1.1" 200 24979
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /01/ HTTP/1.1" 200 26372
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
+"GET /01/ HTTP/1.1" 200 26372
+"GET /static/css/light.css HTTP/1.1" 404 1966
+"GET /static/images/default_avatar.png HTTP/1.1" 404 2002
