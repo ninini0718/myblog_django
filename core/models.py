@@ -1,5 +1,54 @@
 # core/models.py
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
+User = get_user_model()
+
+
+class NotificationManager(models.Manager):
+    def unread(self):
+        return self.filter(unread=True)
+
+    @property
+    def unread_count(self):
+        return self.filter(unread=True).count()
+
+
+class Notification(models.Model):
+    """通用通知模型，用于保存站内通知（e.g. 评论回复、文章新评论等）"""
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', verbose_name='接收者')
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications_from', verbose_name='触发者')
+    verb = models.CharField('动作描述', max_length=255)
+
+    # 可指向任意对象（例如 Comment、Article）
+    target_content_type = models.ForeignKey(ContentType, null=True, blank=True, on_delete=models.CASCADE)
+    target_object_id = models.CharField(max_length=255, null=True, blank=True)
+    target = GenericForeignKey('target_content_type', 'target_object_id')
+
+    unread = models.BooleanField('未读', default=True)
+    timestamp = models.DateTimeField('时间', auto_now_add=True)
+    data = models.JSONField('额外数据', null=True, blank=True)
+
+    objects = NotificationManager()
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = '通知'
+        verbose_name_plural = '通知'
+
+    def __str__(self):
+        return f"通知 to {self.recipient} - {self.verb}"
+
+    def mark_as_read(self):
+        if self.unread:
+            self.unread = False
+            self.save(update_fields=['unread'])
+
+    @classmethod
+    def mark_all_read(cls, user):
+        cls.objects.filter(recipient=user, unread=True).update(unread=False)
 
 class BlogSettings(models.Model):
     """

@@ -21,6 +21,11 @@ urlpatterns = [
     # 关注/取消关注
     path('follow/<str:username>/', views.follow_user, name='follow'),
     path('unfollow/<str:username>/', views.unfollow_user, name='unfollow'),
+    # AJAX 无刷新关注接口
+    path('api/follow/<str:username>/', views.follow_ajax, name='follow_ajax'),
+    path('api/unfollow/<str:username>/', views.unfollow_ajax, name='unfollow_ajax'),
+    # 用户主题设置（AJAX）
+    path('api/set_theme/', views.set_theme, name='set_theme'),
 
     # 🔧 密码找回流程
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset_form.html'), name='password_reset'),

@@ -9,6 +9,13 @@ from .forms import UserUpdateForm, CustomPasswordChangeForm
 from .models import UserProfile
 from django.core.paginator import Paginator
 from django.contrib.auth import views as auth_views
+from django.contrib.contenttypes.models import ContentType
+from core.models import Notification
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 User = get_user_model()
 
@@ -181,8 +188,79 @@ def follow_user(request, username):
     if user_to_follow != request.user:
         request.user.following.add(user_to_follow)
         messages.success(request, f'你已关注 {username}')
+        try:
+            Notification.objects.create(
+                recipient=user_to_follow,
+                actor=request.user,
+                verb='关注了你',
+                target_content_type=ContentType.objects.get_for_model(User),
+                target_object_id=request.user.id,
+                data={'profile_username': request.user.username}
+            )
+        except Exception:
+            # 不影响关注流程，记录异常到日志由其他地方查看
+            pass
     # 修改重定向到用户资料页，而不是文章列表
     return redirect('users:user_profile', username=username)
+
+
+@login_required
+@require_POST
+def follow_ajax(request, username):
+    """AJAX: 关注用户（返回 JSON）"""
+    user_to_follow = get_object_or_404(User, username=username)
+    if user_to_follow == request.user:
+        return JsonResponse({'success': False, 'message': '不能关注自己'}, status=400)
+
+    already = request.user.following.filter(pk=user_to_follow.pk).exists()
+    if already:
+        return JsonResponse({'success': False, 'message': '已关注'}, status=400)
+
+    request.user.following.add(user_to_follow)
+    try:
+        Notification.objects.create(
+            recipient=user_to_follow,
+            actor=request.user,
+            verb='关注了你',
+            target_content_type=ContentType.objects.get_for_model(User),
+            target_object_id=request.user.id,
+            data={'profile_username': request.user.username}
+        )
+    except Exception:
+        pass
+    # 返回最新粉丝数，方便前端更新显示
+    try:
+        followers_count = user_to_follow.followers.count()
+    except Exception:
+        followers_count = None
+    return JsonResponse({'success': True, 'username': username, 'followers_count': followers_count})
+
+
+@login_required
+@require_POST
+def unfollow_ajax(request, username):
+    user_to_unfollow = get_object_or_404(User, username=username)
+    if user_to_unfollow == request.user:
+        return JsonResponse({'success': False, 'message': '不能操作自己'}, status=400)
+    request.user.following.remove(user_to_unfollow)
+    try:
+        followers_count = user_to_unfollow.followers.count()
+    except Exception:
+        followers_count = None
+    return JsonResponse({'success': True, 'username': username, 'followers_count': followers_count})
+
+
+@login_required
+@require_POST
+def set_theme(request):
+    """设置当前用户的博客主题（AJAX）"""
+    theme = request.POST.get('theme')
+    if not theme:
+        return JsonResponse({'success': False, 'message': '缺少 theme 参数'}, status=400)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile.blog_theme = theme
+    profile.save(update_fields=['blog_theme'])
+    return JsonResponse({'success': True, 'theme': theme})
 
 @login_required
 def unfollow_user(request, username):

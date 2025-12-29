@@ -5,167 +5,116 @@
 
 {% block extra_css %}
 <style>
-/* 整体文章容器美化 */
-article {
-    background: #fff;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    margin-bottom: 40px;
-    transition: all 0.3s ease;
+article { 
+  background: white; 
+  border-radius: 0.75rem; 
+  padding: 2rem; 
+  box-shadow: var(--shadow-md); 
+  margin-bottom: 2rem; 
+  transition: var(--transition);
+  animation: fadeInUp 0.6s ease-out;
+}
+article:hover { 
+  transform: translateY(-4px); 
+  box-shadow: var(--shadow-lg); 
 }
 
-article:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+article h1 { 
+  font-size: 2.5rem; 
+  font-weight: 700; 
+  margin-bottom: 1rem;
+  animation: slideInLeft 0.6s ease-out 0.2s backwards;
 }
 
-/* 文章标题 */
-article h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #333;
+.article-meta {
+  animation: slideInLeft 0.6s ease-out 0.3s backwards;
+  opacity: 0;
+  font-size: 0.95rem;
+  color: var(--text-light);
 }
 
-/* 作者信息区 */
-article header .text-muted {
-    font-size: 0.9rem;
-    color: #888;
-    line-height: 2;
+.article-content { 
+  font-size: 1.1rem; 
+  line-height: 1.8;
+  animation: fadeInUp 0.6s ease-out 0.4s backwards;
+  opacity: 0;
 }
 
-article header .text-muted i {
-    margin-right: 5px;
+.article-content img {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  transition: transform 0.3s ease;
+  cursor: zoom-in;
 }
 
-article header a {
-    text-decoration: none;
-    color: #007bff;
+.article-content img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-article header a:hover {
-    text-decoration: underline;
+.social-share { 
+  display: flex; 
+  gap: 0.5rem; 
+  flex-wrap: wrap; 
+  margin-bottom: 1rem;
+  animation: slideInRight 0.6s ease-out 0.5s backwards;
+  opacity: 0;
 }
 
-/* 编辑删除按钮 */
-article header .float-end .btn {
-    margin-left: 5px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-article header .float-end .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-}
-
-/* 文章图片 */
-article .img-fluid {
-    border-radius: 15px;
-    max-height: 400px;
-    object-fit: cover;
-}
-
-/* 文章内容 */
-.article-content {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #444;
-}
-
-/* 分享按钮 */
-.social-share .btn {
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.social-share .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-/* 标签 */
-.badge {
-    font-size: 0.85rem;
-    padding: 0.5em 0.8em;
-    border-radius: 12px;
-    transition: all 0.3s ease;
+.badge { 
+  padding: 0.5rem 0.8rem; 
+  border-radius: 9999px;
+  transition: all 0.3s ease;
 }
 
 .badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: scale(1.1);
 }
 
-/* 点赞按钮 */
-#like-article {
-    border-radius: 8px;
-    transition: all 0.3s ease;
+.comment-list .card { 
+  border-radius: 0.75rem; 
+  box-shadow: var(--shadow-sm); 
+  transition: var(--transition);
+  animation: fadeInUp 0.6s ease-out backwards;
+  opacity: 0;
 }
 
-#like-article:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+.comment-list .card:nth-child(1) { animation-delay: 0.6s; }
+.comment-list .card:nth-child(2) { animation-delay: 0.65s; }
+.comment-list .card:nth-child(3) { animation-delay: 0.7s; }
+.comment-list .card:nth-child(n+4) { animation-delay: 0.75s; }
+
+.comment-list .card:hover { 
+  transform: translateY(-2px); 
+  box-shadow: var(--shadow-md); 
 }
 
-/* 评论区 */
-.comments {
-    margin-top: 50px;
+.btn {
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
-.comments h3 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #333;
+.btn:hover {
+  transform: translateY(-2px);
 }
 
-/* 评论卡片 */
-.comment-list .card {
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-
-.comment-list .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-/* 评论者头像 */
-.comment-list img.rounded-circle {
-    border: 2px solid #ddd;
-    transition: all 0.3s ease;
-}
-
-.comment-list img.rounded-circle:hover {
-    border-color: #007bff;
-}
-
-/* 回复按钮 */
-.reply-btn {
-    font-size: 0.85rem;
-    color: #007bff;
-}
-
-.reply-btn:hover {
-    text-decoration: underline;
-}
-
-/* 二维码弹窗 */
-#qr-modal div {
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+.btn:active {
+  transform: translateY(0);
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<article class="mb-5">
+<article class="mb-5 fade-in">
     <header class="mb-4">
         <h1>{{ article.title }}</h1>
-        <div class="text-muted">
-            <i class="far fa-user"></i> {{ article.author.nickname|default:article.author.username }}
+        <div class="text-muted article-meta">
+            <i class="far fa-user"></i> <a href="{% url 'users:user_profile' article.author.username %}">{{ article.author.nickname|default:article.author.username }}</a>
+            {% if is_following_author %}
+            <span class="badge bg-primary ms-1">你关注的人</span>
+            {% endif %}
+            {% if is_follower_author %}
+            <span class="badge bg-success ms-1">粉丝</span>
+            {% endif %}
             <i class="far fa-calendar"></i> {{ article.created_at|date:"Y-m-d H:i" }}
             <i class="far fa-folder"></i>
             {% if article.category %}
@@ -180,6 +129,14 @@ article .img-fluid {
             <div class="float-end">
                 <a href="{% url 'articles:edit_article' article.slug %}" class="btn btn-sm btn-warning">编辑</a>
                 <a href="{% url 'articles:delete_article' article.slug %}" class="btn btn-sm btn-danger">删除</a>
+            </div>
+            {% else %}
+            <div class="float-end">
+                {% if request.user.is_authenticated %}
+                    <button class="btn btn-sm btn-primary follow-toggle" data-username="{{ article.author.username }}" data-following="{{ is_following_author|yesno:'1,0' }}">
+                        {% if is_following_author %}已关注{% else %}关注该作者{% endif %}
+                    </button>
+                {% endif %}
             </div>
             {% endif %}
         </div>
@@ -260,7 +217,8 @@ article .img-fluid {
     <h3>评论 ({{ comments.count }})</h3>
 
     {% if user.is_authenticated %}
-    <form method="post" action="{% url 'comments:add_comment' article.id %}" class="mb-4 main-comment-form" enctype="multipart/form-data">
+    <!-- 主评论表单（保留原 action，不改） -->
+    <form method="post" action="{% url 'comments:add_comment' article.id %}" class="mb-4 main-comment-form" enctype="multipart/form-data" id="main-comment-form" data-article-id="{{ article.id }}">
         {% csrf_token %}
         <div class="mb-2 position-relative">
             <textarea name="content" class="form-control comment-textarea" rows="3" placeholder="写下你的评论..." required></textarea>
@@ -282,7 +240,7 @@ article .img-fluid {
     {% endif %}
 
     <!-- 评论列表 -->
-    <div class="comment-list">
+    <div class="comment-list" id="comment-list">
         {% for comment in comments %}
         {% if not comment.parent %}
         <div class="card mb-3" id="comment-{{ comment.id }}">
@@ -290,20 +248,28 @@ article .img-fluid {
                 <div class="d-flex justify-content-between">
                     <h6 class="card-subtitle mb-2 text-muted">
                         {% if comment.author.avatar %}
-                            <img src="{{ comment.author.avatar.url }}" class="rounded-circle me-1" width="25">
+                            <img src="{{ comment.author.avatar.url }}" class="rounded-circle me-1" width="25" onerror="this.onerror=null;this.src='{% static 'images/default_avatar.jpg' %}'">
                         {% else %}
-                            <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle me-1" width="25">
+                            <img src="{% static 'images/default_avatar.jpg' %}" class="rounded-circle me-1" width="25">
                         {% endif %}
                         {{ comment.author.nickname|default:comment.author.username }}
+                        {% if user.is_authenticated %}
+                            {% if comment.is_following_author %}
+                            <span class="badge bg-primary ms-1">你关注的人</span>
+                            {% endif %}
+                            {% if comment.is_follower_of_author %}
+                            <span class="badge bg-success ms-1">粉丝</span>
+                            {% endif %}
+                        {% endif %}
                         <small>{{ comment.created_at|date:"Y-m-d H:i" }}</small>
                     </h6>
                     <div>
-                        <button class="btn btn-sm btn-outline-danger like-comment" data-comment-id="{{ comment.id }}">
-                            <i class="far fa-heart"></i> (<span class="comment-likes">{{ comment.likes }}</span>)
+                        <button class="btn btn-sm btn-outline-danger like-btn" data-comment-id="{{ comment.id }}">
+                            <i class="far fa-heart"></i> (<span class="like-count">{{ comment.likes }}</span>)
                         </button>
-                        {% if comment.author == request.user or request.user.is_superuser %}
-                        <a href="{% url 'comments:delete_comment' comment.id %}" class="btn btn-sm btn-outline-danger">删除</a>
-                        {% endif %}
+                        <button class="btn btn-sm btn-outline-danger ajax-delete-comment" data-comment-id="{{ comment.id }}">
+                            删除
+                        </button>
                     </div>
                 </div>
 
@@ -312,13 +278,20 @@ article .img-fluid {
                 {% if user.is_authenticated %}
                 <button class="btn btn-sm btn-link reply-btn" data-comment-id="{{ comment.id }}">回复</button>
                 <div class="reply-form mt-2" id="reply-form-{{ comment.id }}" style="display:none;">
-                    <form method="post" action="{% url 'comments:add_comment' article.id %}">
+                    <form method="post" class="ajax-reply-form" data-comment-id="{{ comment.id }}" action="{% url 'comments:add_comment' article.id %}" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <div class="mb-2">
-                            <textarea name="content" class="form-control" rows="2"
+                        <div class="mb-2 position-relative">
+                            <textarea name="content" class="form-control comment-textarea" rows="2"
                                       placeholder="回复 {{ comment.author.nickname|default:comment.author.username }}..."
                                       required></textarea>
+                            <button type="button" class="btn btn-sm btn-light emoji-btn" style="position:absolute; right:10px; bottom:8px; z-index:3;">😊</button>
+                            <div class="emoji-panel d-none">
+                                <span>😄</span><span>😆</span><span>😂</span><span>🤣</span>
+                                <span>😊</span><span>😍</span><span>😭</span><span>😡</span>
+                                <span>👍</span><span>👎</span><span>🎉</span><span>❤️</span>
+                                <span>🔥</span>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary">回复</button>
                         <button type="button" class="btn btn-sm btn-secondary cancel-reply">取消</button>
@@ -331,14 +304,30 @@ article .img-fluid {
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">
                             {% if reply.author.avatar %}
-                                <img src="{{ reply.author.avatar.url }}" class="rounded-circle me-1" width="20">
+                                <img src="{{ reply.author.avatar.url }}" class="rounded-circle me-1" width="20" onerror="this.onerror=null;this.src='{% static 'images/default_avatar.jpg' %}'">
                             {% else %}
-                                <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle me-1" width="20">
+                                <img src="{% static 'images/default_avatar.jpg' %}" class="rounded-circle me-1" width="20">
                             {% endif %}
                             {{ reply.author.nickname|default:reply.author.username }}
+                            {% if user.is_authenticated %}
+                                {% if reply.is_following_author %}
+                                <span class="badge bg-primary ms-1">你关注的人</span>
+                                {% endif %}
+                                {% if reply.is_follower_of_author %}
+                                <span class="badge bg-success ms-1">粉丝</span>
+                                {% endif %}
+                            {% endif %}
                             <small>{{ reply.created_at|date:"Y-m-d H:i" }}</small>
                         </h6>
                         <p class="card-text">{{ reply.content|linebreaks }}</p>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-danger like-btn" data-comment-id="{{ reply.id }}">
+                                <i class="far fa-heart"></i> (<span class="like-count">{{ reply.likes }}</span>)
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger ajax-delete-comment" data-comment-id="{{ reply.id }}" style="margin-left:6px;">
+                                删除
+                            </button>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -356,30 +345,376 @@ article .img-fluid {
 <script src="{% static 'js/comments.js' %}"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    /* ----------------- 辅助函数 ----------------- */
+    function getCookie(name){
+        const v = document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');
+        return v ? v.pop() : '';
+    }
+    function safeParseJSON(response){
+        return response.text().then(text=>{
+            try{ return JSON.parse(text); } catch(e){ return null; }
+        });
+    }
+    function createCommentNode(data){
+        /* data: expected fields (id, author_avatar, author_nickname, created_at, content_html or content) */
+        const id = data.id || ('tmp-' + Date.now());
+        const avatar = data.author_avatar || "{% static 'images/default_avatar.jpg' %}";
+        const nick = data.author_nickname || data.author_username || "匿名";
+        const created = data.created_at || (new Date()).toLocaleString();
+        const content = data.content_html || data.content || data.content_text || '';
+        const div = document.createElement('div');
+        div.className = 'card mb-3 k-inserted';
+        div.id = 'comment-' + id;
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <img src="${avatar}" class="rounded-circle me-1" width="25">
+                        ${nick}
+                        <small>${created}</small>
+                    </h6>
+                    <div>
+                        <button class="btn btn-sm btn-outline-danger ajax-delete-comment" data-comment-id="${id}">删除</button>
+                    </div>
+                </div>
+                <p class="card-text">${content}</p>
+                ${ userAuthenticated() ? `
+                <button class="btn btn-sm btn-link reply-btn" data-comment-id="${id}">回复</button>
+                <div class="reply-form mt-2" id="reply-form-${id}" style="display:none;">
+                    <form method="post" class="ajax-reply-form" data-comment-id="${id}">
+                        <input type="hidden" name="parent_id" value="${id}">
+                        <div class="mb-2">
+                            <textarea name="content" class="form-control" rows="2" placeholder="回复 ${nick}..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">回复</button>
+                        <button type="button" class="btn btn-sm btn-secondary cancel-reply">取消</button>
+                    </form>
+                </div>` : '' }
+            </div>
+        `;
+        return div;
+    }
+
+    /* ==========================
+       自动跳转到 URL hash 指定的评论（支持懒加载）
+    ========================== */
+    function scrollToAndHighlightComment(commentId) {
+        const H = window.COMMENT_HIGHLIGHT || {duration:3500, boxShadow:'0 0 0 4px rgba(255,200,50,0.18)'};
+        const el = document.getElementById(`comment-${commentId}`);
+        if (el) {
+            el.scrollIntoView({behavior: 'smooth', block: 'center'});
+            el.classList.add('comment-highlight');
+            setTimeout(()=> el.classList.remove('comment-highlight'), H.duration);
+            return Promise.resolve(true);
+        }
+
+        // 如果页面上没有该评论，尝试通过 AJAX 拉取并检查目标页
+        // 若服务器告知评论在第 N 页且 N > 当前 page，则重定向到该 page 并带上 hash
+        const perPageAttr = document.querySelector('.comments-section')?.dataset.pageSize;
+        const fetchUrl = `/comments/api/fetch/${commentId}/` + (perPageAttr ? `?per_page=${perPageAttr}` : '');
+        return fetch(fetchUrl, {
+            credentials: 'same-origin'
+        }).then(r => r.json()).then(data => {
+            if (!data || data.error) return false;
+            const targetPage = data.page || 1;
+            // 获取当前 URL 的 page 参数
+            const urlObj = new URL(window.location.href);
+            const currentPage = parseInt(urlObj.searchParams.get('page') || '1', 10);
+            if (targetPage > 1 && targetPage !== currentPage) {
+                // 重定向到包含 page 的页面并带上 hash，服务器会渲染那一页的评论
+                urlObj.searchParams.set('page', targetPage);
+                window.location.href = urlObj.pathname + urlObj.search + `#comment-${commentId}`;
+                return true;
+            }
+
+            // 否则将服务器返回的 HTML 插入到合适位置：回复插入到父评论下，顶级评论追加到列表末尾
+            const panel = document.querySelector('.comment-list') || document.querySelector('#comments-list') || document.querySelector('.comments-list');
+            if (!panel) return false;
+
+            // 如果是回复，尝试找到父评论并插入到其 .replies 容器
+            if (data.is_reply && data.parent_id) {
+                const parentId = data.parent_id;
+                const parentEl = document.getElementById(`comment-${parentId}`);
+                if (parentEl) {
+                    let replies = parentEl.querySelector('.replies');
+                    if (!replies) {
+                        replies = document.createElement('div');
+                        replies.className = 'replies mt-3';
+                        parentEl.appendChild(replies);
+                    }
+                    replies.insertAdjacentHTML('beforeend', data.html);
+                    const newEl = document.getElementById(`comment-${commentId}`);
+                    if (newEl) {
+                        newEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+                        newEl.classList.add('comment-highlight');
+                        setTimeout(()=> newEl.classList.remove('comment-highlight'), H.duration);
+                        return true;
+                    }
+                    return false;
+                } else {
+                    // 父评论不在 DOM，先拉取父评论并插入，再插入当前回复
+                    return fetch(`/comments/api/fetch/${parentId}/` + (perPageAttr ? `?per_page=${perPageAttr}` : ''), {credentials:'same-origin'})
+                        .then(r=>r.json()).then(pdata=>{
+                            if(!pdata || pdata.error) return false;
+                            panel.insertAdjacentHTML('afterbegin', pdata.html);
+                            // now insert reply under parent
+                            const parentEl2 = document.getElementById(`comment-${parentId}`);
+                            if(!parentEl2) return false;
+                            let replies2 = parentEl2.querySelector('.replies');
+                            if(!replies2){ replies2 = document.createElement('div'); replies2.className='replies mt-3'; parentEl2.appendChild(replies2); }
+                            replies2.insertAdjacentHTML('beforeend', data.html);
+                            const newEl2 = document.getElementById(`comment-${commentId}`);
+                            if(newEl2){ newEl2.scrollIntoView({behavior:'smooth', block:'center'}); newEl2.classList.add('comment-highlight'); setTimeout(()=>newEl2.classList.remove('comment-highlight'), H.duration); return true; }
+                            return false;
+                        }).catch(()=>false);
+                }
+            }
+
+            // 顶级评论：追加到列表末尾（保持页面上当前排序）
+            panel.insertAdjacentHTML('beforeend', data.html);
+            const appended = document.getElementById(`comment-${commentId}`);
+            if (appended) {
+                appended.scrollIntoView({behavior: 'smooth', block: 'center'});
+                appended.classList.add('comment-highlight');
+                setTimeout(()=> appended.classList.remove('comment-highlight'), H.duration);
+                return true;
+            }
+            return false;
+        }).catch(()=>false);
+    }
+
+    // 加入可配置的高亮样式（可通过 window.COMMENT_HIGHLIGHT 覆盖）
+    (function(){
+        const H = window.COMMENT_HIGHLIGHT || {duration:3500, boxShadow:'0 0 0 4px rgba(255,200,50,0.18)'};
+        const style = document.createElement('style');
+        style.textContent = `.comment-highlight{box-shadow:${H.boxShadow};transition:box-shadow .3s ease}`;
+        document.head.appendChild(style);
+    })();
+
+    // 处理 URL hash
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#comment-')){
+        const cid = hash.replace('#comment-','');
+        // 延迟一点，等待客户端渲染现有评论，若未找到则 AJAX 拉取
+        setTimeout(()=>{ scrollToAndHighlightComment(cid); }, 200);
+    }
+    function userAuthenticated(){
+        // 在模板渲染时把一个标记放到 DOM，避免在 JS 中解析 Django user
+        return !!document.body.dataset.userAuthenticated && document.body.dataset.userAuthenticated === "1";
+    }
+
+    /* ----------------- 复制 & 二维码 ----------------- */
     const copyBtn = document.getElementById("copy-share-btn");
     const guide = document.getElementById("share-guide");
     if(copyBtn){
         copyBtn.addEventListener("click", function() {
             const url = "{{ request.build_absolute_uri }}";
-            navigator.clipboard.writeText(url)
-                .then(()=>{ guide.style.display = "block"; })
-                .catch(()=>{ alert("复制失败，请手动复制地址栏"); });
+            navigator.clipboard.writeText(url).then(()=>{ guide.style.display = "block"; })
+            .catch(()=>{ alert("复制失败，请手动复制地址栏"); });
         });
     }
-
     const qrBtn = document.getElementById("qr-share-btn");
     const qrModal = document.getElementById("qr-modal");
     const closeQr = document.getElementById("close-qr");
     const qrImg = document.getElementById("qr-image");
-
     if(qrBtn){
         qrBtn.addEventListener("click", function() {
             qrImg.src = "{% url 'articles:article_qrcode' article.slug %}?t=" + Date.now();
             qrModal.style.display = "block";
         });
     }
-    closeQr.addEventListener("click",()=>{ qrModal.style.display = "none"; });
-    qrModal.addEventListener("click",(e)=>{ if(e.target===qrModal){ qrModal.style.display="none"; } });
+    if(closeQr) closeQr.addEventListener("click",()=>{ qrModal.style.display = "none"; });
+    if(qrModal) qrModal.addEventListener("click",(e)=>{ if(e.target===qrModal){ qrModal.style.display="none"; } });
+
+    /* ----------------- AJAX 删除（保留后端权限逻辑与 URL） ----------------- */
+    function bindDeleteButtons(scope){
+        scope = scope || document;
+        scope.querySelectorAll('.ajax-delete-comment').forEach(btn=>{
+            // avoid double-binding
+            if(btn.dataset.ajaxBound === "1") return;
+            btn.dataset.ajaxBound = "1";
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                const commentId = btn.dataset.commentId;
+                if(!commentId) return;
+                if(!confirm("确定删除这条评论吗？")) return;
+
+                // Use the existing URL pattern (GET) as before; keep same behavior
+                const url = "{% url 'comments:delete_comment' 0 %}".replace('/0/','/'+commentId+'/');
+                fetch(url, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {'X-Requested-With': 'XMLHttpRequest'}
+                }).then(r=>{
+                    if(r.ok){
+                        // remove node if exists
+                        const card = document.getElementById('comment-'+commentId);
+                        if(card) card.remove();
+                        else location.reload(); // fallback
+                    } else if(r.status === 403){
+                        alert("没有权限删除此评论");
+                    } else if(r.status === 404){
+                        alert("评论不存在或已被删除");
+                        const card = document.getElementById('comment-'+commentId);
+                        if(card) card.remove();
+                    } else {
+                        // try parse error message
+                        safeParseJSON(r).then(json=>{
+                            if(json && json.message) alert(json.message);
+                            else alert("删除失败");
+                        });
+                    }
+                }).catch(()=>{ alert("网络错误，删除失败"); });
+            });
+        });
+    }
+    bindDeleteButtons(document);
+
+    /* ----------------- AJAX 回复（保留原后端 URL） ----------------- */
+    function bindReplyToggles(scope){
+        scope = scope || document;
+        scope.querySelectorAll('.reply-btn').forEach(btn=>{
+            if(btn.dataset.replyBound === "1") return;
+            btn.dataset.replyBound = "1";
+            btn.addEventListener('click', function(e){
+                const cid = btn.dataset.commentId;
+                const formWrap = document.getElementById('reply-form-'+cid);
+                if(formWrap) formWrap.style.display = formWrap.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+        scope.querySelectorAll('.cancel-reply').forEach(btn=>{
+            if(btn.dataset.cancelBound === "1") return;
+            btn.dataset.cancelBound = "1";
+            btn.addEventListener('click', function(e){
+                const wrap = btn.closest('.reply-form');
+                if(wrap) wrap.style.display = 'none';
+            });
+        });
+    }
+    bindReplyToggles(document);
+
+    function bindAjaxReplyForms(scope){
+        scope = scope || document;
+        scope.querySelectorAll('.ajax-reply-form').forEach(form=>{
+            if(form.dataset.ajaxBound === "1") return;
+            form.dataset.ajaxBound = "1";
+            form.addEventListener('submit', function(e){
+                e.preventDefault();
+                const cid = form.dataset.commentId;
+                const data = new FormData(form);
+                // include CSRF header too (for backends that require header)
+                const csrftoken = getCookie('csrftoken');
+                fetch("{% url 'comments:add_comment' article.id %}", {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: data
+                }).then(r=>{
+                    // try parse JSON
+                    return safeParseJSON(r).then(json=>{
+                        if(json && json.success){
+                            // server returned JSON w/ created reply data
+                            const parentCard = document.getElementById('comment-'+cid);
+                            if(parentCard){
+                                const replyNode = createCommentNode({
+                                    id: json.comment.id,
+                                    author_avatar: json.comment.author_avatar || "{% static 'images/default_avatar.jpg' %}",
+                                    author_nickname: json.comment.author_nickname || json.comment.author_username || "{{ request.user.username }}",
+                                    created_at: json.comment.created_at || "{{ now|default:'' }}",
+                                    content_html: json.comment.content_html || json.comment.content || ''
+                                });
+                                // append as child reply (after existing replies)
+                                parentCard.appendChild(replyNode);
+                                bindDeleteButtons(replyNode);
+                                bindReplyToggles(replyNode);
+                                bindAjaxReplyForms(replyNode);
+                            } else {
+                                // fallback: reload to show new reply
+                                location.reload();
+                            }
+                            // reset/hide form
+                            form.reset();
+                            const wrap = form.closest('.reply-form');
+                            if(wrap) wrap.style.display = 'none';
+                        } else {
+                            // if JSON not present or not success -> fallback to reload
+                            location.reload();
+                        }
+                    });
+                }).catch(()=>{ alert("网络错误，回复失败"); });
+            });
+        });
+    }
+    bindAjaxReplyForms(document);
+
+    /* ----------------- AJAX 主评论提交（新增） ----------------- */
+    const mainForm = document.getElementById('main-comment-form');
+    if(mainForm){
+        // 避免与全局脚本重复绑定，先标记已绑定
+        try { mainForm.dataset.ajaxBound = "1"; } catch(e){}
+        mainForm.addEventListener('submit', function(e){
+            // attempt AJAX submission, but DO NOT break fallback behavior
+            e.preventDefault();
+
+            const data = new FormData(mainForm);
+            const csrftoken = getCookie('csrftoken');
+
+            fetch("{% url 'comments:add_comment' article.id %}", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                body: data
+            }).then(r=>{
+                // Try parse JSON result
+                return safeParseJSON(r).then(json=>{
+                    if(json && json.success){
+                        // server returned created comment
+                        const commentData = json.comment;
+                        const node = createCommentNode({
+                            id: commentData.id,
+                                    author_avatar: commentData.author_avatar || "{% static 'images/default_avatar.jpg' %}",
+                            author_nickname: commentData.author_nickname || commentData.author_username || "{{ request.user.username }}",
+                            created_at: commentData.created_at || (new Date()).toLocaleString(),
+                            content_html: commentData.content_html || commentData.content || ''
+                        });
+                        // Insert at top of comment list
+                        const list = document.getElementById('comment-list');
+                        if(list){
+                            list.insertBefore(node, list.firstChild);
+                            bindDeleteButtons(node);
+                            bindReplyToggles(node);
+                            bindAjaxReplyForms(node);
+                        } else {
+                            // fallback
+                            location.reload();
+                        }
+                        // reset main form
+                        mainForm.reset();
+                    } else {
+                        // If backend didn't return JSON success, fallback to full page reload so existing non-AJAX behavior keeps working
+                        location.reload();
+                    }
+                });
+            }).catch(()=>{ alert("网络错误，发表评论失败"); });
+        });
+    }
+
+    /* ----------------- ensure dynamically inserted controls are bound ----------------- */
+    // initial bind already done above; delegation could also be used for large scale
+
+    // Mark whether user is authenticated for created nodes:
+    // Add data attribute to body so createCommentNode can check
+    {% if user.is_authenticated %}
+    document.body.dataset.userAuthenticated = "1";
+    {% else %}
+    document.body.dataset.userAuthenticated = "0";
+    {% endif %}
 });
 </script>
 {% endblock %}

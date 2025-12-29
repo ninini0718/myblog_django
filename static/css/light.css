@@ -1,0 +1,5 @@
+/* Light theme wrapper - uses default theme */
+@import url('themes/theme-default.css');
+
+/* Additional light theme tweaks */
+body { background-color: #ffffff; color: #222; }

@@ -1,0 +1,47 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/notification.css' %}">
+{% load humanize %}
+<div class="notifications-panel card shadow-sm p-2 w-100">
+    <h6 class="mb-2">
+        <i class="fas fa-bell"></i> 通知
+        {% if notification_unread_count and notification_unread_count > 0 %}
+            <span class="badge bg-danger">{{ notification_unread_count }}</span>
+        {% endif %}
+    </h6>
+
+    <div class="list-group list-group-flush">
+        {% for n in user.notifications.all|slice:":8" %}
+            <a href="#" class="list-group-item kawaii-item d-flex justify-content-between align-items-start {% if n.unread %}unread{% endif %}" data-id="{{ n.id }}">
+                <div class="d-flex align-items-center">
+                    {% if n.actor and n.actor.profile.avatar %}
+                        <img src="{{ n.actor.profile.avatar.url }}" class="rounded-circle me-2" width="40" height="40" onerror="this.onerror=null;this.src='{% static 'images/default_avatar.jpg' %}'">
+                    {% elif n.actor and n.actor.avatar %}
+                        <img src="{{ n.actor.avatar.url }}" class="rounded-circle me-2" width="40" height="40" onerror="this.onerror=null;this.src='{% static 'images/default_avatar.jpg' %}'">
+                    {% else %}
+                        <div class="avatar-circle">{% if n.actor %}{{ n.actor.username|first|upper }}{% else %}系{% endif %}</div>
+                    {% endif %}
+                    <div class="ms-2">
+                        <div class="small text-muted">{{ n.timestamp|date:"Y-m-d H:i" }}</div>
+                        <div class="k-verb">{% if n.actor %}{{ n.actor.username }}{% else %}系统{% endif %} {{ n.verb }}</div>
+                        {% if n.data.comment_excerpt %}
+                            <div class="small text-muted k-excerpt">{{ n.data.comment_excerpt }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="k-badge">
+                    {% if n.unread %}
+                        <span class="k-new">新</span>
+                    {% endif %}
+                </div>
+            </a>
+        {% empty %}
+            <div class="p-2 text-center text-muted">暂无通知</div>
+        {% endfor %}
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="px-2 d-flex justify-content-between">
+        <a href="#" id="markAllRead" class="btn btn-sm btn-link">全部标为已读</a>
+        <a href="{% url 'comments:notifications_page' %}" class="btn btn-sm btn-primary">查看全部</a>
+    </div>
+</div>
+<script src="{% static 'js/notifications.js' %}"></script>

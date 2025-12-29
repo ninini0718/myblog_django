@@ -22,7 +22,7 @@
                 {% if profile_user.profile.avatar %}
                     <img src="{{ profile_user.profile.avatar.url }}" alt="头像" class="rounded-circle mb-3 border border-2 border-primary" width="150" height="150">
                 {% else %}
-                    <img src="{% static 'images/default-avatar.png' %}" alt="默认头像" class="rounded-circle mb-3 border border-2 border-secondary" width="150" height="150">
+                    <img src="{% static 'images/default_avatar.jpg' %}" alt="默认头像" class="rounded-circle mb-3 border border-2 border-secondary" width="150" height="150">
                 {% endif %}
 
                 <h4 class="mt-2">{{ profile_user.get_full_name|default:profile_user.username }}</h4>
@@ -34,20 +34,18 @@
                 {% endif %}
 
                 <!-- 文章数、关注数、粉丝数 -->
-                <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
-                    <span class="badge bg-primary">文章 {{ profile_user.articles_count }}</span>
-                    <span class="badge bg-success">关注 {{ profile_user.following_count }}</span>
-                    <span class="badge bg-info">粉丝 {{ profile_user.followers_count }}</span>
+                    <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+                    <span class="badge bg-primary">文章 <span id="articles-count">{{ profile_user.articles_count }}</span></span>
+                    <span class="badge bg-success">关注 <span id="following-count">{{ profile_user.following_count }}</span></span>
+                    <span class="badge bg-info">粉丝 <span id="followers-count" data-username="{{ profile_user.username }}">{{ profile_user.followers_count }}</span></span>
                 </div>
 
                 <!-- 关注/取消关注按钮 -->
                 {% if not is_own_profile and request.user.is_authenticated %}
                     <div class="mt-3">
-                        {% if is_following %}
-                            <a href="{% url 'users:unfollow' profile_user.username %}" class="btn btn-outline-secondary btn-sm">取消关注</a>
-                        {% else %}
-                            <a href="{% url 'users:follow' profile_user.username %}" class="btn btn-outline-primary btn-sm">关注</a>
-                        {% endif %}
+                        <button class="btn btn-sm {% if is_following %}btn-outline-secondary{% else %}btn-outline-primary{% endif %} follow-toggle" data-username="{{ profile_user.username }}" data-following="{{ is_following|yesno:'1,0' }}">
+                            {% if is_following %}取消关注{% else %}关注{% endif %}
+                        </button>
                     </div>
                 {% endif %}
 

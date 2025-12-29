@@ -1,98 +1,83 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}创建文章{% endblock %}
 
 {% block extra_css %}
 <style>
-/* 二次元风格整体 */
-body {
-    background: #fce4ec; /* 粉色萌系背景 */
-    font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+body { background: linear-gradient(135deg, #f8f9fa, #ffffff); }
+h1 { 
+  color: var(--primary); 
+  font-weight: 700; 
+  margin-bottom: 2rem; 
+  animation: slideInLeft 0.6s ease-out;
 }
-
-/* 页面标题 */
-h1 {
-    color: #ff4081;
-    font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
-    margin-bottom: 30px;
-}
-
-/* 表单容器 */
 form {
-    background: linear-gradient(135deg, #fff0f5, #ffe6f0);
-    border: 2px solid #ff80ab;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(255,64,129,0.2);
-    transition: all 0.3s ease;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+form:hover { box-shadow: var(--shadow-lg); }
+
+/* 表单分组动画 */
+.mb-3 {
+  animation: fadeInUp 0.6s ease-out backwards;
+  opacity: 0;
+}
+.mb-3:nth-of-type(1) { animation-delay: 0.3s; }
+.mb-3:nth-of-type(2) { animation-delay: 0.35s; }
+.mb-3:nth-of-type(3) { animation-delay: 0.4s; }
+.mb-3:nth-of-type(4) { animation-delay: 0.45s; }
+.mb-3:nth-of-type(5) { animation-delay: 0.5s; }
+.mb-3:nth-of-type(6) { animation-delay: 0.55s; }
+.mb-3:nth-of-type(7) { animation-delay: 0.6s; }
+.mb-3:nth-of-type(8) { animation-delay: 0.65s; }
+
+.form-label { 
+  font-weight: 600; 
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+.form-control, .form-select { 
+  border-radius: 0.5rem; 
+  border: 1px solid var(--border-light);
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  font-size: 0.95rem;
+}
+.form-control:focus, .form-select:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 0.2rem rgba(255,64,129,0.25);
+  transform: scale(1.01);
 }
 
-form:hover {
-    box-shadow: 0 20px 45px rgba(255,64,129,0.3);
+/* 按钮样式 */
+.btn-primary { 
+  background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border: none;
+  margin-top: 1rem;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  animation: slideInRight 0.6s ease-out 0.7s backwards;
 }
-
-/* 表单标签 */
-.form-label {
-    font-weight: bold;
-    color: #d81b60;
+.btn-primary:hover { 
+  transform: translateY(-3px); 
+  box-shadow: var(--shadow-lg);
 }
+.btn-primary:active { transform: translateY(-1px); }
 
-/* 表单输入框 */
-input.form-control, select.form-control, textarea.form-control {
-    border-radius: 15px;
-    border: 2px solid #ff80ab;
-    padding: 10px 15px;
-    transition: all 0.3s;
+/* 搜索按钮 */
+.btn-search-field {
+  transition: all 0.3s ease;
 }
-
-input.form-control:focus,
-select.form-control:focus,
-textarea.form-control:focus {
-    border-color: #ff4081;
-    box-shadow: 0 0 0 0.25rem rgba(255,64,129,0.25);
-}
-
-/* 复选框 */
-.form-check-input {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ff80ab;
-    border-radius: 5px;
-    accent-color: #ff4081;
-}
-
-/* 提交按钮 */
-.btn-primary {
-    background: linear-gradient(135deg, #ff80ab, #ff4081);
-    border: none;
-    border-radius: 50px;
-    padding: 10px 25px;
-    font-weight: bold;
-    color: white;
-    box-shadow: 0 8px 20px rgba(255,64,129,0.3);
-    transition: all 0.3s;
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(255,64,129,0.4);
-}
-
-/* Markdown 编辑器（如果有） */
-.markdownx {
-    border-radius: 15px;
-    border: 2px solid #ff80ab;
-}
-
-.markdownx:focus {
-    border-color: #ff4081;
-    box-shadow: 0 0 0 0.25rem rgba(255,64,129,0.25);
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    form {
-        padding: 20px;
-    }
+.btn-search-field:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 </style>
 {% endblock %}
@@ -115,11 +100,11 @@ textarea.form-control:focus {
                 <label for="{{ form.content.id_for_label }}" class="form-label">内容</label>
                 {{ form.content }}
             </div>
-            <div class="mb-3">
+            <div class="mb-3 field-category">
                 <label for="{{ form.category.id_for_label }}" class="form-label">分类</label>
                 {{ form.category }}
             </div>
-            <div class="mb-3">
+            <div class="mb-3 field-tags">
                 <label for="{{ form.tags.id_for_label }}" class="form-label">标签</label>
                 {{ form.tags }}
             </div>
@@ -139,4 +124,8 @@ textarea.form-control:focus {
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/article_field_search.js' %}"></script>
 {% endblock %}

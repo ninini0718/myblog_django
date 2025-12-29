@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>系统设置</h3>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">站点名称</label>
+    <input name="site_title" class="form-control" value="{{ settings.site_title }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">描述</label>
+    <textarea name="site_description" class="form-control" rows="4">{{ settings.site_description }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">主题</label>
+    <select name="active_theme" class="form-select">
+      <option value="default" {% if settings.active_theme=='default' %}selected{% endif %}>默认</option>
+      <option value="light" {% if settings.active_theme=='light' %}selected{% endif %}>亮色</option>
+      <option value="dark" {% if settings.active_theme=='dark' %}selected{% endif %}>暗色</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">背景图</label>
+    <input type="file" name="background_image" class="form-control">
+    {% if settings.background_image %}
+      <div class="mt-2"><img src="{{ settings.background_image.url }}" style="max-height:120px"></div>
+    {% endif %}
+  </div>
+  <button class="btn btn-primary">保存设置</button>
+</form>
+{% endblock %}

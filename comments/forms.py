@@ -23,3 +23,8 @@ class CommentForm(forms.ModelForm):
         self.fields['content'].widget.attrs.update({
             'placeholder': '写下你的评论...',
         })
+
+
+class NotificationActionForm(forms.Form):
+    notification_id = forms.IntegerField()
+    action = forms.ChoiceField(choices=(('mark_read','mark_read'),('delete','delete')))

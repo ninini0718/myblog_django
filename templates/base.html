@@ -6,72 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ profile_user.profile.blog_title|default:"我的博客" }}{% endblock %}</title>
 
+    <!-- 早期加载主题管理器，避免闪屏 -->
+    <script src="{% static 'js/theme_manager.js' %}"></script>
+
     <!-- Bootstrap 5 样式 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- 🔧 博客主题样式 -->
-    {% if profile_user.profile.blog_theme == 'dark' %}
-        <link rel="stylesheet" href="{% static 'css/dark.css' %}">
-    {% elif profile_user.profile.blog_theme == 'card' %}
-        <link rel="stylesheet" href="{% static 'css/card.css' %}">
+    <!-- 博客主题样式（单个可切换的样式表，id 用于 JS 动态替换） -->
+    {% if active_theme == 'dark' %}
+        <link id="theme-stylesheet" rel="stylesheet" href="{% static 'css/dark.css' %}">
+    {% elif active_theme == 'card' %}
+        <link id="theme-stylesheet" rel="stylesheet" href="{% static 'css/card.css' %}">
     {% else %}
-        <link rel="stylesheet" href="{% static 'css/light.css' %}">
+        <link id="theme-stylesheet" rel="stylesheet" href="{% static 'css/light.css' %}">
     {% endif %}
-
-    <style>
-        /* 背景效果 */
-        body {
-            background-image: url('{% if profile_user.profile.blog_background %}{{ profile_user.profile.blog_background.url }}{% endif %}');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            min-height: 100vh;
-        }
-
-        /* 导航栏 */
-        .navbar {
-            border-radius: 0 0 1rem 1rem;
-        }
-
-        /* 主内容卡片样式 */
-        main.container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* 页脚样式 */
-        footer {
-            border-top-left-radius: 1rem;
-            border-top-right-radius: 1rem;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-        }
-
-        /* 按钮圆角 */
-        .btn {
-            border-radius: 0.5rem;
-        }
-
-        /* 消息提示美化 */
-        .alert {
-            border-radius: 0.5rem;
-        }
-
-        /* 卡片阴影 */
-        .card {
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        /* 分页按钮对齐 */
-        .pagination .page-link {
-            min-width: 60px;
-            text-align: center;
-        }
-    </style>
+    <!-- 全局基础样式 -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <!-- Select2 CSS (用于标签 UI) -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {% block extra_head %}{% endblock %}
 </head>
 
 <body>
@@ -86,15 +39,52 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'comments:notifications_page' %}" title="通知">
+                            <i class="fas fa-bell"></i> 通知
+                            {% if notification_unread_count and notification_unread_count > 0 %}
+                                <span class="badge rounded-pill bg-danger ms-1">{{ notification_unread_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'articles:article_list' %}">首页</a></li>
+                    {% if user.is_authenticated and user.is_superuser %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'core:admin_dashboard' %}">管理后台</a></li>
+                    {% endif %}
 
                     {% if user.is_authenticated %}
+                        <!-- 评论通知 -->
+                        <li class="nav-item dropdown position-relative">
+                            <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fa-lg"></i>
+                                {% if notification_unread_count and notification_unread_count > 0 %}
+                                    <span class="badge rounded-pill bg-danger badge-notification">{{ notification_unread_count }}</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+                                {% include 'notifications/notification_panel.html' %}
+                            </ul>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 {{ user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user me-1"></i> 个人资料</a></li>
+                                {% if user.is_superuser %}
+                                    <li><a class="dropdown-item" href="{% url 'core:admin_dashboard' %}"><i class="fas fa-tools me-1"></i> 管理后台</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="px-2">
+                                    <small class="text-muted">主题：</small>
+                                    <div class="d-flex gap-1 mt-1">
+                                        <button class="btn btn-sm btn-light theme-btn" data-theme="light">亮色</button>
+                                        <button class="btn btn-sm btn-dark theme-btn text-white" data-theme="dark">暗色</button>
+                                        <button class="btn btn-sm btn-outline-secondary theme-btn" data-theme="card">卡片</button>
+                                    </div>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="post" action="{% url 'account_logout' %}">
@@ -138,6 +128,108 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 JS (用于标签 UI) -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{% static 'js/admin_select2_init.js' %}"></script>
+    <script src="{% static 'js/site_ui.js' %}"></script>
+    <script>
+    // 全局 follow-toggle & theme 处理：支持无刷新关注与主题切换
+    (function(){
+        function getCookie(name){ const v = document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)'); return v? v.pop():''; }
+        document.addEventListener('click', function(e){
+            const followBtn = e.target.closest('.follow-toggle');
+            if(followBtn){
+                e.preventDefault();
+                const username = followBtn.dataset.username;
+                const following = followBtn.dataset.following === '1' || followBtn.dataset.following === 'true';
+                const csrftoken = getCookie('csrftoken');
+                const url = following ? `/users/api/unfollow/${username}/` : `/users/api/follow/${username}/`;
+                fetch(url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(r=>r.json()).then(data=>{
+                    if(!data) return;
+                    if(data.success){
+                        const newFollowing = following ? '0' : '1';
+                        followBtn.dataset.following = newFollowing;
+                        if(newFollowing === '1'){
+                            followBtn.classList.remove('btn-outline-primary'); followBtn.classList.add('btn-outline-secondary');
+                            followBtn.textContent = '已关注';
+                        } else {
+                            followBtn.classList.remove('btn-outline-secondary'); followBtn.classList.add('btn-outline-primary');
+                            followBtn.textContent = '关注';
+                        }
+                        try{ const el = document.getElementById('followers-count'); if(el && el.dataset.username === username && typeof data.followers_count !== 'undefined'){ el.textContent = data.followers_count; } }catch(err){}
+                        try{ if(window.fetchNotifications) setTimeout(window.fetchNotifications, 200); }catch(e){}
+                    } else if(data.message){ alert(data.message); }
+                }).catch(()=>{ alert('网络错误，请稍后再试'); });
+                return;
+            }
+
+            const tbtn = e.target.closest('.theme-btn');
+            if(tbtn){
+    // Fallback: 明确绑定每个 theme-btn，避免委托在极端情况下失效
+    (function(){
+        try{
+            const btns = document.querySelectorAll('.theme-btn');
+            if(!btns) return;
+            function getCookie(name){ const v = document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)'); return v? v.pop():''; }
+            btns.forEach(b=>{
+                b.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const theme = this.dataset.theme;
+                    const csrftoken = getCookie('csrftoken');
+                    const body = new FormData(); body.append('theme', theme);
+                    fetch('{% url "users:set_theme" %}', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'X-CSRFToken': csrftoken },
+                        body: body
+                    }).then(r=>r.json()).then(d=>{
+                        if(d && d.success){
+                            const link = document.getElementById('theme-stylesheet');
+                            if(link){
+                                if(theme === 'dark') link.href = "{% static 'css/dark.css' %}";
+                                else if(theme === 'card') link.href = "{% static 'css/card.css' %}";
+                                else link.href = "{% static 'css/light.css' %}";
+                            }
+                        } else if(d && d.message) alert(d.message);
+                    }).catch(()=>{ alert('设置主题失败'); });
+                });
+            });
+        }catch(e){ console.warn('theme fallback bind failed', e); }
+    })();
+                e.preventDefault();
+                const theme = tbtn.dataset.theme;
+                const csrftoken = getCookie('csrftoken');
+                const body = new FormData(); body.append('theme', theme);
+                fetch('{% url "users:set_theme" %}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'X-CSRFToken': csrftoken },
+                    body: body
+                }).then(r=>r.json()).then(d=>{
+                    if(d && d.success){
+                        const link = document.getElementById('theme-stylesheet');
+                        if(link){
+                            if(theme === 'dark') link.href = "{% static 'css/dark.css' %}";
+                            else if(theme === 'card') link.href = "{% static 'css/card.css' %}";
+                            else link.href = "{% static 'css/light.css' %}";
+                        }
+                    } else if(d && d.message) alert(d.message);
+                }).catch(()=>{ alert('设置主题失败'); });
+            }
+        });
+    })();
+    </script>
+    <!-- 增强的动画与视觉效果脚本 -->
+    <script src="{% static 'js/animations.js' %}"></script>
+    <script src="{% static 'js/enhanced_animations.js' %}"></script>
+    <script src="{% static 'js/micro_interactions.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

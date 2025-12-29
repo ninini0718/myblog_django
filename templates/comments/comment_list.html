@@ -1,7 +1,7 @@
 {% load static %}
 {% load humanize %}
 
-<div class="comments-section anime-comments-section">
+<div class="comments-section anime-comments-section" {% if page_obj %}data-page-size="{{ page_obj.paginator.per_page }}"{% endif %}>
     <h3 class="anime-comments-title">
         <i class="fas fa-comments"></i> 评论 ({{ total_comments }})
     </h3>

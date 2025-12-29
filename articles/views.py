@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.contrib import messages
 from django.http import JsonResponse,HttpResponse,FileResponse
 from .models import Article, Category, Tag
+from django.core.cache import cache
 from .forms import ArticleForm
 import markdown
 import qrcode
@@ -58,6 +59,17 @@ def article_list(request):
     categories = Category.objects.all()
     tags = Tag.objects.all()
     
+    # 为每篇文章标记关注/粉丝状态（当前用户）
+    current_user = request.user
+    if current_user.is_authenticated:
+        # 获取当前用户的关注列表和粉丝列表
+        following_ids = set(current_user.following.values_list('id', flat=True))
+        followers_ids = set(current_user.followers.values_list('id', flat=True))
+        
+        for article in page_obj:
+            article.is_following_author = article.author.id in following_ids
+            article.is_follower_of_author = article.author.id in followers_ids
+    
     context = {
         'page_obj': page_obj,
         'categories': categories,
@@ -85,9 +97,36 @@ def article_detail(request, slug):
     # 获取父评论
     comments = article.comments.filter(is_approved=True, parent__isnull=True).order_by('created_at')
     
+    # 当前用户是否已关注文章作者（用于显示关注按钮）
+    is_following_author = False
+    is_follower_author = False
+    following_ids = set()
+    followers_ids = set()
+    
+    if request.user.is_authenticated:
+        try:
+            is_following_author = request.user.following.filter(pk=article.author.pk).exists()
+            is_follower_author = request.user.followers.filter(pk=article.author.pk).exists()
+            # 获取当前用户的关注列表和粉丝列表
+            following_ids = set(request.user.following.values_list('id', flat=True))
+            followers_ids = set(request.user.followers.values_list('id', flat=True))
+        except Exception:
+            is_following_author = False
+    
+    # 为每个评论标记关注/粉丝状态
+    for comment in comments:
+        comment.is_following_author = comment.author.id in following_ids
+        comment.is_follower_of_author = comment.author.id in followers_ids
+        # 为回复也标记状态
+        for reply in comment.replies.all():
+            reply.is_following_author = reply.author.id in following_ids
+            reply.is_follower_of_author = reply.author.id in followers_ids
+
     context = {
         'article': article,
         'comments': comments,
+        'is_following_author': is_following_author,
+        'is_follower_author': is_follower_author,
     }
     return render(request, 'articles/article_detail.html', context)
 
@@ -189,3 +228,51 @@ def article_qrcode(request, slug):
         qr_img.save(qr_path)
 
     return FileResponse(open(qr_path, "rb"), content_type="image/png")
+
+
+@login_required
+@require_POST
+def api_create_tag(request):
+    """通过 AJAX 创建新的 Tag（仅限 staff/superuser）"""
+    # 允许普通用户创建，但进行速率限制以防滥用
+    # 基于用户 id 或 IP 做限流
+    if request.user.is_authenticated:
+        key = f'tag_create_uid_{request.user.id}'
+    else:
+        ip = request.META.get('REMOTE_ADDR', 'anon')
+        key = f'tag_create_ip_{ip}'
+
+    limit = 5  # 每分钟最多 5 次
+    current = cache.get(key) or 0
+    if current >= limit:
+        return JsonResponse({'success': False, 'message': '创建过于频繁，请稍后再试'}, status=429)
+    cache.set(key, current + 1, timeout=60)
+
+    name = request.POST.get('name', '').strip()
+    if not name:
+        return JsonResponse({'success': False, 'message': '标签名不能为空'}, status=400)
+
+    tag, created = Tag.objects.get_or_create(name=name)
+    return JsonResponse({'success': True, 'created': created, 'id': tag.id, 'name': tag.name})
+
+
+@require_GET
+def api_search_categories(request):
+    q = request.GET.get('q', '').strip()
+    if not q:
+        qs = Category.objects.all()[:20]
+    else:
+        qs = Category.objects.filter(name__icontains=q)[:20]
+    results = [{'id': c.id, 'name': c.name} for c in qs]
+    return JsonResponse({'results': results})
+
+
+@require_GET
+def api_search_tags(request):
+    q = request.GET.get('q', '').strip()
+    if not q:
+        qs = Tag.objects.all()[:50]
+    else:
+        qs = Tag.objects.filter(name__icontains=q)[:50]
+    results = [{'id': t.id, 'name': t.name} for t in qs]
+    return JsonResponse({'results': results})

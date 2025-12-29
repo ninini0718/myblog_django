@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>用户管理</h3>
+<table class="table">
+  <thead><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>
+    {% for u in page_obj %}
+    <tr id="user-{{ u.id }}">
+      <td>{{ u.id }}</td>
+      <td>{{ u.username }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.is_active|yesno:"激活,已封禁" }}</td>
+      <td>
+        <form method="post" action="{% url 'core:admin_user_action' u.id %}" class="d-inline action-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="{% if u.is_active %}ban{% else %}unban{% endif %}">
+          <button class="btn btn-sm btn-warning">{% if u.is_active %}封禁{% else %}解封{% endif %}</button>
+        </form>
+        <form method="post" action="{% url 'core:admin_user_action' u.id %}" class="d-inline action-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <button class="btn btn-sm btn-danger">删除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<nav>
+  {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">上一页</a>{% endif %}
+  <span> 第 {{ page_obj.number }} 页 </span>
+  {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">下一页</a>{% endif %}
+</nav>
+<script>
+// 绑定 AJAX 操作，避免页面跳转
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.action-form').forEach(form=>{
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const data = new FormData(form);
+      fetch(form.action, {method:'POST', headers:{'X-CSRFToken': data.get('csrfmiddlewaretoken')}, body: data})
+        .then(r=>r.json()).then(d=>{ if(d.success) location.reload(); else alert(d.message||'操作失败'); })
+        .catch(()=>alert('网络错误'));
+    });
+  });
+});
+</script>
+{% endblock %}

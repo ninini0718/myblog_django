@@ -29,6 +29,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('search/', include('articles.search_urls', namespace='search')),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('core/', include('core.urls', namespace='core')),
 
 ]
 

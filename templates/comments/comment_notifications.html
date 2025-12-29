@@ -1,10 +1,11 @@
 {% load static %}
+{% load humanize %}
 
-<div class="notifications-panel card shadow-sm p-3">
+<div class="notifications-panel card shadow-sm p-3 w-100">
     <h4 class="mb-3 notifications-title">
         <i class="fas fa-bell"></i> 评论通知
-        {% if unread_count > 0 %}
-            <span class="badge bg-danger">{{ unread_count }}</span>
+        {% if notification_unread_count and notification_unread_count > 0 %}
+            <span class="badge bg-danger">{{ notification_unread_count }}</span>
         {% endif %}
     </h4>
     
@@ -43,7 +44,6 @@
             {% endfor %}
         </div>
         
-        <!-- 分页 -->
         {% if is_paginated %}
             <nav aria-label="通知分页" class="mt-3">
                 <ul class="pagination pagination-sm justify-content-center">
@@ -75,72 +75,70 @@
 
 <style>
 .notifications-panel {
-    max-height: 500px;
-    overflow-y: auto;
-    background-color: #fdfdfd;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 15px;
+    max-height: 500px !important;
+    overflow-y: auto !important;
+    background-color: #fdfdfd !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    padding: 15px !important;
+    width: 100% !important;
 }
 
 .notifications-title {
-    font-weight: 600;
-    color: #343a40;
-    text-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+    font-weight: 600 !important;
+    color: #343a40 !important;
 }
 
 .notification-item {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    transition: all 0.2s ease;
+    background-color: #ffffff !important;
+    border: 1px solid #e9ecef !important;
+    transition: all 0.2s ease !important;
 }
 
 .notification-item:hover {
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background-color: #f8f9fa !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
 }
 
 .unread {
-    border-left: 4px solid #007bff;
-    background-color: #e7f1ff;
+    border-left: 4px solid #007bff !important;
+    background-color: #e7f1ff !important;
 }
 
 .notification-title {
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
 }
 
 .notification-message {
-    font-size: 0.875rem;
-    color: #495057;
+    font-size: 0.875rem !important;
+    color: #495057 !important;
 }
 
 .notification-actions button,
 .notification-actions a {
-    font-size: 0.8rem;
+    font-size: 0.8rem !important;
 }
 
 .no-notifications {
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
+    background-color: #f8f9fa !important;
+    border-radius: 12px !important;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.03) !important;
+    padding: 30px !important;
 }
 </style>
 
 <script>
 function markAsRead(notificationId) {
-    fetch(`/notifications/api/${notificationId}/read/`, {
+    const data = new FormData();
+    data.append('notification_id', notificationId);
+    data.append('action', 'mark_read');
+    fetch('/comments/notifications/mark/', {
         method: 'POST',
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        }
-    });
+        credentials: 'same-origin',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') },
+        body: data,
+    }).then(r=>r.json()).then(d=>{ if(d.success) location.reload(); }).catch(()=>{});
 }
 
 function getCookie(name) {

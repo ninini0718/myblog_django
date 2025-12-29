@@ -4,8 +4,8 @@
 <div class="comment-form-container">
     <h4>发表评论</h4>
     {% if user.is_authenticated %}
-        <form method="post"
-              action="{% url 'comments:create' %}"
+          <form method="post"
+              action="{% url 'comments:add_comment' article.id %}"
               class="comment-form main-comment-form"
               id="comment-form"
               data-article-id="{{ article.id }}"
@@ -31,13 +31,13 @@
 
             <div class="mb-3">
                 <button type="button" class="btn btn-sm btn-outline-secondary emoji-toggle">😊 表情</button>
-                <div id="emoji-picker" class="emoji-picker">
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('😀')">😀</button>
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('😂')">😂</button>
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('❤️')">❤️</button>
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('👍')">👍</button>
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('🎉')">🎉</button>
-                    <button type="button" class="emoji-btn" onclick="insertEmoji('🔥')">🔥</button>
+                <div class="emoji-picker">
+                    <button type="button" class="emoji-btn" data-emoji="😀">😀</button>
+                    <button type="button" class="emoji-btn" data-emoji="😂">😂</button>
+                    <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                    <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+                    <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+                    <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
                 </div>
             </div>
 
@@ -165,24 +165,38 @@
 </style>
 
 <script>
-function toggleEmoji() {
-    const picker = document.getElementById('emoji-picker');
-    picker.style.display = picker.style.display==='none'?'flex':'none';
-}
-function insertEmoji(emoji) {
-    const textarea = document.getElementById('{{ form.content.id_for_label }}');
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    textarea.value = text.substring(0,start)+emoji+text.substring(end);
-    textarea.selectionStart = textarea.selectionEnd = start+emoji.length;
-    textarea.focus();
-}
 function cancelReply() { window.location.href='{{ article.get_absolute_url }}'; }
 
-/* 绑定表情按钮 */
-document.addEventListener("DOMContentLoaded", function() {
-    const toggleBtn = document.querySelector('.emoji-toggle');
-    if(toggleBtn) toggleBtn.addEventListener('click', toggleEmoji);
+// 事件委托：支持多个表单内的 emoji picker 和按钮
+document.addEventListener('click', function(e){
+    const t = e.target;
+    // toggle picker
+    const toggle = t.closest('.emoji-toggle');
+    if(toggle){
+        const form = toggle.closest('form');
+        if(!form) return;
+        const picker = form.querySelector('.emoji-picker');
+        if(!picker) return;
+        picker.style.display = (picker.style.display === 'flex') ? 'none' : 'flex';
+        return;
+    }
+
+    // emoji button
+    const eb = t.closest('.emoji-btn');
+    if(eb){
+        const emoji = eb.dataset.emoji || eb.textContent || '';
+        const form = eb.closest('form');
+        if(!form) return;
+        const textarea = form.querySelector('textarea[name="content"]');
+        if(!textarea) return;
+        const start = textarea.selectionStart || 0;
+        const end = textarea.selectionEnd || 0;
+        const val = textarea.value || '';
+        textarea.value = val.substring(0,start) + emoji + val.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+        textarea.focus();
+        // keep picker open for multiple emojis
+        return;
+    }
 });
 </script>

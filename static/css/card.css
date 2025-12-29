@@ -1,0 +1,21 @@
+/* Card 主题（基于现有主题样式） */
+@import url('themes/theme-default.css');
+
+body {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  color: #222;
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 6px 18px rgba(35, 45, 70, 0.08);
+}
+
+.navbar {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #ff6ec4, #7873f5, #42e695);
+  color: white;
+}

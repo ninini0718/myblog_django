@@ -1,0 +1,241 @@
+/* 全局基础样式，抽取自 base.html 内联样式 */
+
+/* ===== 动画定义 ===== */
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== 实用类 ===== */
+.fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* 圆角与过渡 */
+.rounded-transition {
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #ff6ec4, #7873f5, #42e695);
+  color: white;
+  border: none;
+}
+.btn-gradient:hover {
+  background-position: right center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 消息提示美化 */
+.alert { border-radius: 0.5rem; }
+
+/* 卡片阴影 */
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+/* 分页按钮对齐 */
+.pagination .page-link { min-width: 60px; text-align: center; }
+
+/* 二次元标题文字效果 */
+.gradient-title {
+  font-weight: 700;
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #ff6ec4, #7873f5, #42e695);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 评论通知图标 */
+.nav-item .badge-notification {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  font-size: 0.7rem;
+  background: #ff3b5c;
+}
+
+/* 动画效果 */
+.fade-in { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* 图片懒加载占位 */
+.lazy-img { background: #f4f4f4; min-height: 60px; display:block; }
+
+/* ==================== 现代设计系统 ==================== */
+:root {
+  --primary: #ff4081;
+  --primary-light: #ff80ab;
+  --primary-dark: #c60055;
+  --secondary: #7873f5;
+  --success: #42e695;
+  --danger: #ff3b5c;
+  --warning: #ffc107;
+  --text-light: #212529;
+  --text-muted: #6c757d;
+  --border-light: #e9ecef;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 全局排版 */
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+h1 { font-size: 2.2rem; margin-bottom: 1.5rem; font-weight: 600; }
+h2 { font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 600; }
+
+/* 卡片样式 */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+/* 按钮增强 */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  box-shadow: 0 4px 12px rgba(255,64,129,0.3);
+  border: none;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  box-shadow: 0 6px 20px rgba(255,64,129,0.4);
+  transform: translateY(-2px);
+  color: white;
+}
+
+/* 导航栏美化 */
+.navbar {
+  box-shadow: var(--shadow-md);
+  border-bottom: 2px solid var(--primary-light);
+}
+.nav-link {
+  transition: var(--transition);
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-light);
+  transition: width 0.3s;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* 文章卡片 */
+.article-card {
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: white;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.article-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+.article-card-title { font-size: 1.3rem; font-weight: 600; }
+.article-card-title a { color: var(--text-light); text-decoration: none; }
+.article-card-title a:hover { color: var(--primary); }
+
+/* 表单样式 */
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(255,64,129,0.25);
+}
+.form-label { font-weight: 600; margin-bottom: 0.5rem; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+}

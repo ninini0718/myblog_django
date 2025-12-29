@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card p-4">
+  <h3>管理后台</h3>
+  <div class="row mt-3">
+    <div class="col-md-3"><div class="card p-3">用户数<br><strong>{{ users_count }}</strong></div></div>
+    <div class="col-md-3"><div class="card p-3">文章数<br><strong>{{ articles_count }}</strong></div></div>
+    <div class="col-md-3"><div class="card p-3">评论数<br><strong>{{ comments_count }}</strong></div></div>
+    <div class="col-md-3"><a href="{% url 'core:admin_users' %}" class="btn btn-primary">管理用户</a> <a href="{% url 'core:admin_articles' %}" class="btn btn-secondary">管理文章</a></div>
+  </div>
+  <div class="mt-4">
+    <a href="{% url 'core:admin_comments' %}" class="btn btn-outline-primary">管理评论</a>
+    <a href="{% url 'core:admin_settings' %}" class="btn btn-outline-secondary">系统设置</a>
+  </div>
+</div>
+{% endblock %}

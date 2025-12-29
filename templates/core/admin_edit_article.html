@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>编辑文章 #{{ article.id }}</h3>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">标题</label>
+    <input name="title" class="form-control" value="{{ article.title }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">内容</label>
+    <textarea name="content" class="form-control" rows="10">{{ article.content }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">状态</label>
+    <select name="status" class="form-select">
+      <option value="published" {% if article.status=='published' %}selected{% endif %}>已发布</option>
+      <option value="draft" {% if article.status=='draft' %}selected{% endif %}>草稿</option>
+    </select>
+  </div>
+  <button class="btn btn-primary">保存</button>
+</form>
+{% endblock %}

@@ -13,4 +13,7 @@ urlpatterns = [
     path('delete/<slug:slug>/', views.delete_article, name='delete_article'),  # 修改这里
     path('like/<slug:slug>/', views.like_article, name='like_article'),
     path("qrcode/<slug:slug>/", views.article_qrcode, name="article_qrcode"),
+    path('api/create_tag/', views.api_create_tag, name='api_create_tag'),
+    path('api/search_categories/', views.api_search_categories, name='api_search_categories'),
+    path('api/search_tags/', views.api_search_tags, name='api_search_tags'),
 ]

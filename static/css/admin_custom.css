@@ -1,0 +1,22 @@
+/* 自定义 admin 风格，给文章编辑页做些微调 */
+/* 填充与更大输入区 */
+.field-content .readonly, .field-content textarea, .field-content .vLargeTextField {
+  min-height: 300px;
+}
+
+/* 更醒目的标签 */
+fieldset.module h2, .form-row .field-label {
+  color: #2b6cb0; /* 深蓝 */
+}
+
+/* 图片预览小样式 */
+.field-image img {
+  max-width: 200px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+/* 更宽的表单控件 */
+.form-row .field-input, .form-row .field-content {
+  max-width: 90%;
+}
