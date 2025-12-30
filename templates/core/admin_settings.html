@@ -14,9 +14,9 @@
   <div class="mb-3">
     <label class="form-label">主题</label>
     <select name="active_theme" class="form-select">
-      <option value="default" {% if settings.active_theme=='default' %}selected{% endif %}>默认</option>
-      <option value="light" {% if settings.active_theme=='light' %}selected{% endif %}>亮色</option>
-      <option value="dark" {% if settings.active_theme=='dark' %}selected{% endif %}>暗色</option>
+      <option value="default" {% if settings.active_theme|default_if_none:"default"|equalto:"default" %}selected{% endif %}>默认</option>
+      <option value="light" {% if settings.active_theme|equalto:"light" %}selected{% endif %}>亮色</option>
+      <option value="dark" {% if settings.active_theme|equalto:"dark" %}selected{% endif %}>暗色</option>
     </select>
   </div>
   <div class="mb-3">
