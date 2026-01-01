@@ -75,6 +75,24 @@
   animation: scaleIn 0.3s ease-out;
 }
 
+/* ===== 弹窗与下拉菜单层级修正 ===== */
+.modal, .modal-backdrop, .afs-modal, .dropdown-menu, .profile-modal, .logout-modal {
+  z-index: 2050 !important;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 2050 !important;
+}
+
+.modal-backdrop {
+  z-index: 2040 !important;
+}
+
+.afs-modal {
+  z-index: 2100 !important;
+}
+
 /* 圆角与过渡 */
 .rounded-transition {
   border-radius: 0.5rem;
