@@ -198,17 +198,17 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 分类搜索
+    // 分类搜索 - 同时搜索"分类"和"热门分类"
     const categorySearchInput = document.getElementById('categorySearchInput');
-    const categoryList = document.getElementById('categoryList');
-    const categoryItems = categoryList.querySelectorAll('[data-category-name]');
-    
     if (categorySearchInput) {
         categorySearchInput.addEventListener('keyup', function(e) {
-            const searchText = e.target.value.toLowerCase();
+            const searchText = e.target.value.toLowerCase().trim();
+            
+            // 搜索"分类"卡片中的项目
+            const categoryItems = document.querySelectorAll('#categoryList [data-category-name]');
             categoryItems.forEach(item => {
                 const categoryName = item.getAttribute('data-category-name');
-                if (categoryName.includes(searchText)) {
+                if (searchText === '' || categoryName.includes(searchText)) {
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';
@@ -217,16 +217,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 标签搜索
+    // 标签搜索 - 同时搜索"标签"和"热门标签"
     const tagSearchInput = document.getElementById('tagSearchInput');
-    const tagButtons = document.querySelectorAll('#tagList .tag-btn');
-    
     if (tagSearchInput) {
         tagSearchInput.addEventListener('keyup', function(e) {
-            const searchText = e.target.value.toLowerCase();
+            const searchText = e.target.value.toLowerCase().trim();
+            
+            // 搜索"标签"卡片中的按钮
+            const tagButtons = document.querySelectorAll('#tagList .tag-btn');
             tagButtons.forEach(btn => {
                 const tagName = btn.getAttribute('data-tag-name');
-                if (tagName.includes(searchText)) {
+                if (searchText === '' || tagName.includes(searchText)) {
                     btn.style.display = 'inline-block';
                 } else {
                     btn.style.display = 'none';

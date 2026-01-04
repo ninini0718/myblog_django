@@ -503,7 +503,39 @@ document.addEventListener("DOMContentLoaded", function() {
         return !!document.body.dataset.userAuthenticated && document.body.dataset.userAuthenticated === "1";
     }
 
-    /* ----------------- 复制 & 二维码 ----------------- */
+    /* ----------------- 复制 & 二维码 & 文章点赞 ----------------- */
+    
+    // 文章点赞功能
+    const likeArticleBtn = document.getElementById('like-article');
+    if (likeArticleBtn) {
+        likeArticleBtn.addEventListener('click', function() {
+            const url = this.dataset.url;
+            const likesSpan = document.getElementById('article-likes');
+            
+            fetch(url, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || this.dataset.csrf || ''
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.likes !== undefined) {
+                    likesSpan.textContent = data.likes;
+                    // 添加点赞动画效果
+                    this.classList.add('animate__heartBeat');
+                    setTimeout(() => this.classList.remove('animate__heartBeat'), 600);
+                }
+            })
+            .catch(err => {
+                console.error('点赞失败:', err);
+                alert('点赞失败，请重试');
+            });
+        });
+    }
+    
     const copyBtn = document.getElementById("copy-share-btn");
     const guide = document.getElementById("share-guide");
     if(copyBtn){
