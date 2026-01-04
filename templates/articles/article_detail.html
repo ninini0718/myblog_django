@@ -508,30 +508,47 @@ document.addEventListener("DOMContentLoaded", function() {
     // 文章点赞功能
     const likeArticleBtn = document.getElementById('like-article');
     if (likeArticleBtn) {
-        likeArticleBtn.addEventListener('click', function() {
+        likeArticleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             const url = this.dataset.url;
             const likesSpan = document.getElementById('article-likes');
+            
+            // 获取CSRF令牌
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                            this.dataset.csrf || 
+                            document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
             
             fetch(url, {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || this.dataset.csrf || ''
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
                 }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 403 || res.status === 401) {
+                    alert('请先登录后再点赞');
+                    window.location.href = '{% url "account_login" %}';
+                    return null;
+                }
+                return res.json();
+            })
             .then(data => {
-                if (data.likes !== undefined) {
+                if (data && data.likes !== undefined) {
                     likesSpan.textContent = data.likes;
-                    // 添加点赞动画效果
-                    this.classList.add('animate__heartBeat');
-                    setTimeout(() => this.classList.remove('animate__heartBeat'), 600);
+                    // 添加点赞视觉反馈
+                    likeArticleBtn.style.color = '#dc3545';
+                    likeArticleBtn.innerHTML = '<i class="fas fa-heart"></i> 点赞 (<span id="article-likes">' + data.likes + '</span>)';
+                    setTimeout(() => {
+                        likeArticleBtn.style.color = '';
+                    }, 1000);
                 }
             })
             .catch(err => {
                 console.error('点赞失败:', err);
-                alert('点赞失败，请重试');
+                alert('点赞失败，请重试或确保已登录');
             });
         });
     }

@@ -79,6 +79,40 @@ form:hover { box-shadow: var(--shadow-lg); }
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
+/* 分类和标签字段容器 */
+.field-category, .field-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.field-category label, .field-tags label {
+  width: 100%;
+}
+
+.field-category select, .field-tags select,
+.field-category [role="group"], .field-tags [role="group"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* 搜索结果样式 */
+.afs-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.afs-item:hover {
+  background: #f8f9fa;
+}
+
+.afs-item:last-child {
+  border-bottom: none;
+}
 </style>
 {% endblock %}
 
