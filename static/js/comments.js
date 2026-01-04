@@ -1,11 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
-
-    let activeTextarea = null;
+    let submitInProgress = false;  // 全局标志防止重复提交
 
     /* ==========================
        1️⃣ AJAX 提交评论 / 回复
     ========================== */
     function submitCommentForm(form) {
+        // 防止重复提交
+        if (submitInProgress) {
+            return;
+        }
+        submitInProgress = true;
+        
         const formData = new FormData(form);
         const submitBtn = form.querySelector('button[type="submit"], input[type="submit"], button:not([type])');
         if (submitBtn) {
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     submitBtn.innerHTML = submitBtn.dataset.origText || '发表评论';
                 }
                 showTopNotice('评论已发布', 'success');
+                submitInProgress = false;
                 return;
             }
 
@@ -87,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.innerHTML = submitBtn.dataset.origText || '发表评论';
             }
             showTopNotice('评论发布成功！', 'success');
+            submitInProgress = false;
         })
         .catch(err => {
             console.error(err);
@@ -95,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = submitBtn.dataset.origText || '发表评论';
             }
+            submitInProgress = false;
         });
     }
 
@@ -167,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ==========================
-       3️⃣ 主评论提交
+       3️⃣ 主评论提交和回复表单提交
     ========================== */
     const mainForm = document.querySelector('.main-comment-form');
     if (mainForm) {
@@ -216,12 +223,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (btn.classList.contains('delete-btn')) deleteComment(id);
     });
 
+    // 处理回复表单的提交（事件委托）
     commentList?.addEventListener('submit', function (e) {
         const form = e.target.closest('form');
         if (!form) return;
+        
+        // 如果是主评论表单，跳过（已单独处理）
+        if (form === mainForm) return;
+        
         e.preventDefault();
-        // 如果表单被页面内联脚本（例如模板脚本）绑定并标记为处理过，跳过以避免重复插入
-        if (form.dataset.ajaxBound === "1") return;
         submitCommentForm(form);
     });
 

@@ -139,10 +139,11 @@
                 <h4>分类</h4>
             </div>
             <div class="card-body">
-                <div class="list-group">
-                    <a href="{% url 'articles:article_list' %}" class="list-group-item {% if not category_slug %}active{% endif %}">全部</a>
+                <input type="text" id="categorySearchInput" class="form-control form-control-sm mb-2" placeholder="搜索分类...">
+                <div class="list-group" id="categoryList">
+                    <a href="{% url 'articles:article_list' %}" class="list-group-item list-group-item-action {% if not category_slug %}active{% endif %}" data-category-name="all">全部</a>
                     {% for category in categories %}
-                    <a href="?category={{ category.slug }}" class="list-group-item {% if category.slug == category_slug %}active{% endif %}">
+                    <a href="?category={{ category.slug }}" class="list-group-item list-group-item-action {% if category.slug == category_slug %}active{% endif %}" data-category-name="{{ category.name|lower }}">
                         {{ category.name }} ({{ category.article_set.count }})
                     </a>
                     {% endfor %}
@@ -170,9 +171,12 @@
                 <h4>标签</h4>
             </div>
             <div class="card-body">
-                {% for tag in tags %}
-                <a href="?tag={{ tag.slug }}" class="btn btn-outline-secondary btn-sm m-1 {% if tag.slug == tag_slug %}bg-primary text-white{% endif %}">{{ tag.name }}</a>
-                {% endfor %}
+                <input type="text" id="tagSearchInput" class="form-control form-control-sm mb-2" placeholder="搜索标签...">
+                <div id="tagList">
+                    {% for tag in tags %}
+                    <a href="?tag={{ tag.slug }}" class="btn btn-outline-secondary btn-sm m-1 tag-btn {% if tag.slug == tag_slug %}bg-primary text-white{% endif %}" data-tag-name="{{ tag.name|lower }}">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
@@ -191,4 +195,46 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 分类搜索
+    const categorySearchInput = document.getElementById('categorySearchInput');
+    const categoryList = document.getElementById('categoryList');
+    const categoryItems = categoryList.querySelectorAll('[data-category-name]');
+    
+    if (categorySearchInput) {
+        categorySearchInput.addEventListener('keyup', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            categoryItems.forEach(item => {
+                const categoryName = item.getAttribute('data-category-name');
+                if (categoryName.includes(searchText)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // 标签搜索
+    const tagSearchInput = document.getElementById('tagSearchInput');
+    const tagButtons = document.querySelectorAll('#tagList .tag-btn');
+    
+    if (tagSearchInput) {
+        tagSearchInput.addEventListener('keyup', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            tagButtons.forEach(btn => {
+                const tagName = btn.getAttribute('data-tag-name');
+                if (tagName.includes(searchText)) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+</script>
 {% endblock %}
+
