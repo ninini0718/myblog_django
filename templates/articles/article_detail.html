@@ -597,6 +597,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // 注意：bindAjaxReplyForms 函数已被删除
     // 因为 comments.js 中的全局事件委托已经处理了所有表单提交
     // 包括主评论表单和回复表单，避免重复处理导致评论出现两次
+    
+    // 标记用户是否已认证
+    {% if user.is_authenticated %}
+    document.body.dataset.userAuthenticated = "1";
+    {% else %}
     document.body.dataset.userAuthenticated = "0";
     {% endif %}
 });
